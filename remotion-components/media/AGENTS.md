@@ -33,7 +33,7 @@
 <Texture src="textures/noise.svg" repeat="tile" opacity={0.06} drift={0.4} />
 ```
 
-`repeat="cover"`（默认，全景纹理 mesh/contour/stars…）或 `"tile"`（noise 颗粒）。`drift` 让背景图缓慢平移（数值 = 每 100 帧移动的视口百分比）。纹理由 make-textures.mjs seed 生成，`public/textures/manifest.json` 记录了 seed/palette——想要变体改 seed 重跑即可，不要手改 SVG。
+`repeat="cover"`（默认，全景纹理 mesh/contour/stars…）或 `"tile"`（noise 颗粒）。`drift` 让背景图缓慢平移（数值 = 每 100 帧移动的视口百分比）。纹理由 make-textures.mjs seed 生成，`public/textures/manifest.json` 记录了 seed/palette——想要变体改 seed 或 palette 重跑即可；脚本不满足需求时，拷出去改、直接手写 SVG 或换任何来源都行，Texture 只认路径。
 
 ## 素材目录约定（三条管线共用）
 

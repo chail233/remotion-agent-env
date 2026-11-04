@@ -64,4 +64,4 @@ node scripts/make-textures.mjs [--kinds mesh,halftone,contour,stripes,stars,grid
   [--palette "#07080C,#FFB35C,#6FA8FF"] [--w 1920 --h 1080] [--prefix cinema-] [--out public/textures]
 ```
 
-零依赖纯 SVG 生成，7 种纹理：`mesh`（多团模糊色斑渐变底）、`halftone`（波纹圆点阵）、`contour`（等高线）、`stripes`（斜条纹）、`stars`（星点尘埃场）、`grid`（蓝图方格，透明底）、`noise`（220px 胶片颗粒 tile）。同 seed 同产物（mulberry32），`public/textures/manifest.json` 记录参数；换 `--seed`/`--palette` 出变体。渲染端用 `media/03 Texture.tsx`（noise 用 `repeat="tile"`，其余 cover）。
+零依赖纯 SVG 生成，7 种纹理：`mesh`（多团模糊色斑渐变底）、`halftone`（波纹圆点阵）、`contour`（等高线）、`stripes`（斜条纹）、`stars`（星点尘埃场）、`grid`（蓝图方格，透明底）、`noise`（220px 胶片颗粒 tile）。同 seed 同产物（mulberry32），`public/textures/manifest.json` 记录参数；换 `--seed`/`--palette` 出变体。渲染端用 `media/03 Texture.tsx`（noise 用 `repeat="tile"`，其余 cover）。要新纹理种类：在脚本的 `gens` 表里加一个生成函数即可，其余（参数/落盘/清单）都是现成的；脚本本身也鼓励拷出去改。

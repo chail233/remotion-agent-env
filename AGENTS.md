@@ -23,7 +23,7 @@
 | `npm run typecheck`                | 类型检查                                                        |
 | `npm run upgrade`                  | 升级 Remotion 全家桶                                            |
 
-入口 `src/index.ts` → `src/Root.tsx`（已注册 `CinemaKitDemo` 与 `MediaKitDemo` 两个演示合成）。
+入口 `src/index.ts` → `src/Root.tsx`（已注册 `CinemaKitDemo` 与 `MediaKitDemo` 两个演示合成；`MediaKitDemo` 依赖素材，渲染前先跑一遍下面三条素材管线）。
 
 新增 Remotion 包用 `npx remotion add <pkg>` 以保证版本一致，`npx remotion versions` 校验。
 
@@ -32,7 +32,7 @@
 本地组件库（不是 npm 包）：`base` 主题/字体、`scene` 背景/外壳/面板、`text` 字幕/气泡/标签/进度条、`code-display` 代码与终端窗口、`effects` 粒子、`characters` 像素角色、`motion` hook、`media` 图标/Lottie/纹理消费件、`audio` 音效、`cinema` 深色电影感套件、`scripts` 素材生成与批量预览。总目录见 `remotion-components/AGENTS.md`，各分类目录下另有外观说明表。
 
 - **按需取用**：它是工具箱不是模板。可以只用一部分、完全不用，也可以把文件拷进 `src/` 后随意改样式、拆件、重组。库的默认外观不构成对创意与设计的约束——方案与组件冲突时改组件。
-- **不参与 `npm run typecheck`**：库内 import 写成同目录形式（`./theme`），放在原目录解析不到；拷进 `src/` 的同一目录（或统一改 import 路径）后即纳入检查。拷贝时 `base/theme.ts` 基本必带，`code-display/` 还依赖 `timeline.ts` 与 `colorize.tsx`。
+- **不参与 `npm run typecheck`**：库内 import 写成同目录形式（`./theme`），放在原目录解析不到；拷进 `src/` 的同一目录（或统一改 import 路径）后即纳入检查。拷贝时 `base/theme.ts` 基本必带；`code-display/` 还依赖 `timeline.ts` 与 `colorize.tsx`；`cinema/` 自带独立 theme 整目录一起拷；`media/` 免 theme 但素材要先用脚本生成到 public/。
 - **依赖已就绪**：`scripts/stills.mjs` 需要的 `@remotion/bundler`、`@remotion/renderer`（4.0.535）已装并在 package.json 里声明。
 - **字体素材**：`base/fonts.ts` 读 `public/fonts/NotoSansSC-VF.ttf`、`NotoSerifSC-VF.ttf`、`CascadiaCode.ttf`，本机 `C:\Windows\Fonts` 三个都在，需要时自行拷入：
 
@@ -50,7 +50,7 @@
   node remotion-components/scripts/stills.mjs --entry src/index.ts --comp <Id> 120 450   # 批量抽预览帧
   ```
 
-  生成的素材不进 git，按需重跑再生成；来源与许可见各目录下的 licenses.json / manifest.json。
+  生成的素材不进 git，按需重跑再生成；来源与许可见各目录下的 licenses.json / manifest.json。管线的完整参数说明在 `remotion-components/scripts/AGENTS.md`，消费组件（上色/播放/铺底）在 `remotion-components/media/AGENTS.md`。
 
 - `npm run format` 已用 `.prettierignore` 跳过 `remotion-components/`，不会改写库本体。
 

@@ -51,7 +51,7 @@
 
 - `Reveal` `{delay?=0, y?=38, x?=0, scaleFrom?=0.965, blur?=0, config?=smooth, style, children}`：一个弹簧同时驱动透明度/位移/缩放/模糊。最常用的入场包裹层
 - `Words` `{text, delay?=0, per?=2.4, style, charStyle, hot?=[], hotColor?=hero, byWord?=false, entranceY?=34}`：逐字 snappy 弹簧级联（translateY+scale+rotate 1.2°→0）。中文按字级联，`byWord` 按空格分词；空格不占序号；`hot` 序号（按可见字符计）的字符染 hotColor 并带 drop-shadow 发光
-- `ExitWrap` `{duration, frames?=16, scaleTo?=1.025, children, style}`：绝对定位铺满层，在时长 `duration` 的最后 `frames` 帧加速淡出并放大到 scaleTo（结束点 duration-2）。每个场景内容都应包在它里面
+- `ExitWrap` `{duration, frames?=16, scaleTo?=1.025, children, style}`：绝对定位铺满层，在时长 `duration` 的最后 `frames` 帧加速淡出并放大到 scaleTo（结束点 duration-2）。原片每个场景的内容都包在它里面形成统一的收尾节奏，是否沿用由场景设计决定
 
 ## 04 SceneShell.tsx — 场景骨架
 
