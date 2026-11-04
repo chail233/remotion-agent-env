@@ -18,25 +18,25 @@ npm run dev                   # Studio，默认 http://localhost:3000
 
 ## 环境构成
 
-| 组成 | 说明 |
-| --- | --- |
+| 组成                                                                                                        | 说明                                            |
+| ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
 | `remotion` + `@remotion/cli` / `bundler` / `renderer` / `player` / `transitions` / `google-fonts` / `media` | 全部 **4.0.535**，Remotion 要求各包与主包同版本 |
-| React 19.3 / TypeScript 5.9 / zod 4.5.4 | zod 版本由 Remotion 锁定，不要手动升 |
-| Chrome Headless Shell | 落在 `node_modules/.remotion/`，不进仓库 |
-| `remotion-components/` | 本地通用组件库，**可选用**，见下文 |
+| React 19.3 / TypeScript 5.9 / zod 4.5.4                                                                     | zod 版本由 Remotion 锁定，不要手动升            |
+| Chrome Headless Shell                                                                                       | 落在 `node_modules/.remotion/`，不进仓库        |
+| `remotion-components/`                                                                                      | 本地通用组件库，**可选用**，见下文              |
 
 ## 命令
 
-| 命令 | 用途 |
-| --- | --- |
-| `npm run dev` | 启动 Studio（长驻进程） |
-| `npm run compositions` | 列出已注册合成；0 个合成时会报 `Array of 0 length`，属正常 |
-| `npm run still -- <Id> out/x.png` | 渲染单帧，最快的视觉验证 |
-| `npm run render -- <Id> out/x.mp4` | 渲染视频；加 `--frames=0-60` 做短片验证 |
-| `npm run bundle` | 产出可嵌入的静态 bundle |
-| `npm run typecheck` | 类型检查 |
-| `npm run upgrade` | 升级 Remotion 全家桶（保持版本一致） |
-| `npm run format` | Prettier 写入格式 |
+| 命令                               | 用途                                                       |
+| ---------------------------------- | ---------------------------------------------------------- |
+| `npm run dev`                      | 启动 Studio（长驻进程）                                    |
+| `npm run compositions`             | 列出已注册合成；0 个合成时会报 `Array of 0 length`，属正常 |
+| `npm run still -- <Id> out/x.png`  | 渲染单帧，最快的视觉验证                                   |
+| `npm run render -- <Id> out/x.mp4` | 渲染视频；加 `--frames=0-60` 做短片验证                    |
+| `npm run bundle`                   | 产出可嵌入的静态 bundle                                    |
+| `npm run typecheck`                | 类型检查                                                   |
+| `npm run upgrade`                  | 升级 Remotion 全家桶（保持版本一致）                       |
+| `npm run format`                   | Prettier 写入格式                                          |
 
 新增 Remotion 生态包请用 `npx remotion add <pkg>`，再用 `npx remotion versions` 校验，避免版本漂移。
 

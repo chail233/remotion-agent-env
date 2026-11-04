@@ -4,3 +4,7 @@ dist/
 *.log
 .DS_Store
 Thumbs.db
+
+# Agent 工具本地状态与机器本地素材（见 AGENTS.md 字体拷贝步骤）
+.zcode/
+public/fonts/

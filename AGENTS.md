@@ -14,14 +14,14 @@
 
 ## 命令
 
-| 命令 | 用途 |
-| --- | --- |
-| `npm run dev` | 启动 Studio（长驻进程，后台方式跑；默认 http://localhost:3000） |
-| `npm run compositions` | 列出已注册合成；0 个合成时报 `Array of 0 length`，属正常 |
-| `npm run still -- <Id> out/x.png` | 渲染单帧，最快的视觉验证 |
-| `npm run render -- <Id> out/x.mp4` | 渲染视频；加 `--frames=0-60` 做短片验证 |
-| `npm run typecheck` | 类型检查 |
-| `npm run upgrade` | 升级 Remotion 全家桶 |
+| 命令                               | 用途                                                            |
+| ---------------------------------- | --------------------------------------------------------------- |
+| `npm run dev`                      | 启动 Studio（长驻进程，后台方式跑；默认 http://localhost:3000） |
+| `npm run compositions`             | 列出已注册合成；0 个合成时报 `Array of 0 length`，属正常        |
+| `npm run still -- <Id> out/x.png`  | 渲染单帧，最快的视觉验证                                        |
+| `npm run render -- <Id> out/x.mp4` | 渲染视频；加 `--frames=0-60` 做短片验证                         |
+| `npm run typecheck`                | 类型检查                                                        |
+| `npm run upgrade`                  | 升级 Remotion 全家桶                                            |
 
 入口 `src/index.ts` → `src/Root.tsx`（当前未注册任何合成）。
 

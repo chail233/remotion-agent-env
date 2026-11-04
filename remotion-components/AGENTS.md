@@ -11,6 +11,7 @@
 - 所有坐标/字号默认值按 **1920×1080** 画布标定（`base/01 theme` 的 `W/H/FPS` 常量可自取）；换画布尺寸时缩放外层容器或改 props
 - 动画**只依赖当前帧号**（`useCurrentFrame`），时间参数一律用**帧**；在 `<Series.Sequence>` 或 `<AbsoluteFill>` 里都是本地帧，无外部时钟
 - **依赖规则**：除 `audio/01 Sfx` 和 `scripts/` 外，所有组件都依赖 `base/01 theme`；库内 import 一律写成同目录形式（`./theme`、`./timeline`…）。接入项目时把这些文件放同一目录，或统一改 import 路径
+- **例外：`cinema/` 是自带独立 theme 的整套深色电影感套件**（提取自 ConcurrentArt 成片），组件只 import 本目录的 `cinema/01 theme.ts`，与 `base/01` 不混用；拷贝时整个 cinema/ 目录一起带，不需要 base/theme.ts（字体仍用 `base/02 fonts.ts`）
 - 少数文件之间有依赖，各文件头注释和分类 AGENTS.md 已标明，拷贝时一起带上
 - 依赖版本：`remotion@4.0.535 @remotion/cli@4.0.535 react@19.1.0 react-dom@19.1.0`，dev 依赖 `@remotion/bundler @remotion/renderer` 同版本；`tsconfig.json` 的 `lib` 需含 `"DOM", "DOM.Iterable"`
 
@@ -20,6 +21,12 @@
 |---|---|---|
 | base/01 | theme.ts | 配色/字体/画布常量 + hexA/clamp 工具，全库必带 |
 | base/02 | fonts.ts | loadFonts()：加载中/西/代码三套字体 |
+| cinema/01 | theme.ts | cinema 套件独立 token：深色配色/字体/缓动/弹簧 + alpha/glow |
+| cinema/02 | Background.tsx | 背景：深色底 + 漂移光斑 + 点阵网格 + 尘埃；调色/颗粒/暗角收尾层 |
+| cinema/03 | Reveal.tsx | 动效：单弹簧入场、逐字级联标题、场景末尾加速退场 |
+| cinema/04 | SceneShell.tsx | 外壳：五层深色场景壳 + 慢视差；Phase 时间窗块；脉冲连线 |
+| cinema/05 | UI.tsx | 部件：发光胶囊/终端芯片/滚动数字/眉题/章节标/玻璃卡片/辉光点 |
+| cinema/06 | Captions.tsx | 字幕：深色玻璃胶囊字幕条（全局帧，放 Sequence 外） |
 | characters/01 | Clawdia.tsx | 像素风方块角色（SVG），9 表情 × 4 头饰 × 5 手持物，可换色 |
 | scene/01 | Paper.tsx | 背景：米白底 + 淡棕方格线，全屏 |
 | scene/02 | Scene.tsx | 外壳：章节卡片 + 页眉 + 首尾淡入淡出 |
