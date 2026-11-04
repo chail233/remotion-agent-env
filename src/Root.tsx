@@ -1,6 +1,15 @@
 import React from "react";
-import { AbsoluteFill, Composition, useCurrentFrame } from "remotion";
+import {
+  AbsoluteFill,
+  Composition,
+  spring,
+  useCurrentFrame,
+  useVideoConfig,
+} from "remotion";
 import { loadFonts } from "./fonts";
+import { Icon } from "./media/Icon";
+import { LottieAnim } from "./media/LottieAnim";
+import { Texture } from "./media/Texture";
 import { Captions, type Cap } from "./cinema/Captions";
 import { Reveal, Words } from "./cinema/Reveal";
 import { Phase, PulseLine, SceneShell } from "./cinema/SceneShell";
@@ -143,13 +152,160 @@ const CinemaKitDemo: React.FC = () => {
   );
 };
 
+// MediaKitDemo — media/ 素材管线活示例：Texture（make-textures 产物）+ Icon（fetch-icons 产物）
+// + LottieAnim（fetch-lottie 产物）。先跑一遍三条管线脚本再渲染本合成。
+const MEDIA_DUR = 180;
+
+const ICONS: { name: string; label: string; color: string }[] = [
+  { name: "lucide-rocket", label: "lucide", color: "#FFB35C" },
+  { name: "lucide-cpu", label: "lucide", color: "#5FE3C8" },
+  { name: "lucide-git-branch", label: "lucide", color: "#6FA8FF" },
+  { name: "tabler-brand-react", label: "tabler", color: "#B49BFF" },
+];
+
+const MediaKitDemo: React.FC = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  return (
+    <AbsoluteFill
+      style={{
+        backgroundColor: "#07080C",
+        fontFamily: '"Kit Sans", "Microsoft YaHei", sans-serif',
+      }}
+    >
+      <Texture src="textures/mesh.svg" />
+      <Texture src="textures/noise.svg" repeat="tile" opacity={0.05} drift={0.5} />
+
+      {/* 左列：标题 + 图标行（逐个弹簧入场，mask 上色） */}
+      <div style={{ position: "absolute", left: 150, top: 210, width: 700 }}>
+        <div
+          style={{
+            fontFamily: '"Kit Mono", monospace',
+            fontSize: 20,
+            letterSpacing: "0.26em",
+            color: "#FFB35C",
+            textTransform: "uppercase",
+          }}
+        >
+          Asset Pipelines
+        </div>
+        <div
+          style={{
+            fontFamily: '"Kit Serif", serif',
+            fontSize: 76,
+            fontWeight: 700,
+            color: "#F3EFE7",
+            marginTop: 18,
+            lineHeight: 1.2,
+          }}
+        >
+          图标 · Lottie · 程序化纹理
+        </div>
+        <div style={{ color: "#98A0AE", fontSize: 26, marginTop: 16, lineHeight: 1.6 }}>
+          素材由脚本生成或拉取到 public/，组件只负责消费；许可登记在清单文件里。
+        </div>
+        <div style={{ display: "flex", gap: 34, marginTop: 64 }}>
+          {ICONS.map((ic, i) => {
+            const p = spring({
+              frame: frame - 40 - i * 8,
+              fps,
+              config: { damping: 14, stiffness: 160, mass: 0.6 },
+            });
+            return (
+              <div
+                key={ic.name}
+                style={{
+                  textAlign: "center",
+                  opacity: p,
+                  transform: `scale(${0.7 + 0.3 * p})`,
+                }}
+              >
+                <Icon name={ic.name} size={84} color={ic.color} />
+                <div
+                  style={{
+                    fontFamily: '"Kit Mono", monospace',
+                    fontSize: 17,
+                    color: "#98A0AE",
+                    marginTop: 14,
+                    letterSpacing: "0.08em",
+                  }}
+                >
+                  {ic.label}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 右列：Lottie 动画（fetch-lottie 产物）+ 网格纹理小卡（drift 演示） */}
+      <div
+        style={{
+          position: "absolute",
+          left: 1060,
+          top: 200,
+          width: 620,
+          height: 620,
+          borderRadius: 28,
+          background: "rgba(8,10,15,0.72)",
+          border: "1px solid rgba(255,255,255,0.10)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <LottieAnim src="lottie/demo-cat.json" loop style={{ width: 460 }} />
+      </div>
+      <div
+        style={{
+          position: "absolute",
+          left: 1060,
+          top: 850,
+          width: 620,
+          height: 120,
+          borderRadius: 20,
+          overflow: "hidden",
+          border: "1px solid rgba(255,255,255,0.10)",
+        }}
+      >
+        <Texture src="textures/grid.svg" drift={0.8} style={{ backgroundSize: "auto" }} />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#98A0AE",
+            fontFamily: '"Kit Mono", monospace',
+            fontSize: 20,
+            letterSpacing: "0.12em",
+          }}
+        >
+          textures/grid.svg · drift
+        </div>
+      </div>
+    </AbsoluteFill>
+  );
+};
+
 export const RemotionRoot: React.FC = () => (
-  <Composition
-    id="CinemaKitDemo"
-    component={CinemaKitDemo}
-    durationInFrames={DUR}
-    fps={FPS}
-    width={W}
-    height={H}
-  />
+  <>
+    <Composition
+      id="CinemaKitDemo"
+      component={CinemaKitDemo}
+      durationInFrames={DUR}
+      fps={FPS}
+      width={W}
+      height={H}
+    />
+    <Composition
+      id="MediaKitDemo"
+      component={MediaKitDemo}
+      durationInFrames={MEDIA_DUR}
+      fps={FPS}
+      width={W}
+      height={H}
+    />
+  </>
 );
