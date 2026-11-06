@@ -27,9 +27,7 @@
 | cinema/04 | SceneShell.tsx | 外壳：五层深色场景壳 + 慢视差；Phase 时间窗块；脉冲连线 |
 | cinema/05 | UI.tsx | 部件：发光胶囊/终端芯片/滚动数字/眉题/章节标/玻璃卡片/辉光点 |
 | cinema/06 | Captions.tsx | 字幕：深色玻璃胶囊字幕条（全局帧，放 Sequence 外） |
-| characters/01 | Clawdia.tsx | 像素风方块角色（SVG），9 表情 × 4 头饰 × 5 手持物，可换色 |
 | scene/01 | Paper.tsx | 背景：米白底 + 淡棕方格线，全屏 |
-| scene/02 | Scene.tsx | 外壳：章节卡片 + 页眉 + 首尾淡入淡出 |
 | scene/03 | Stage.tsx | 面板：半透明圆角矩形，裁切超出内容，位置尺寸任意 |
 | scene/04 | LightBg.tsx | 背景：暖纸底 + 三团漂移光斑 + 点阵 + 旋转角饰，亮色完整背景栈 |
 | scene/05 | DuoPanel.tsx | 面板：左右双色对比面板（图标座 + 小字 + 标题）+ 中央脊线 |
