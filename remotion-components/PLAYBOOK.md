@@ -32,6 +32,7 @@
 ## 转场
 
 - **硬切当乐器**：连闪定格切点间隔渐紧（如 22f→18f）读作快门连拍；切串全片 ≤1 次，切完 hold 给平常两倍；真硬切不要加 2f 交叉淡化。
+- **现成转场件**：`transitions/`（WhipPan/LightLeak/IrisWipe/ZoomBlur/PageTurn/Hyperspace）配 `@remotion/transitions` 的 `<TransitionSeries>` 使用，用法见该目录 AGENTS.md；全片 1–2 种转场足够，按情绪选型而不是每幕换着用。
 
 ## 反模式（Banned list）
 

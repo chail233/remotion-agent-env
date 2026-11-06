@@ -10,7 +10,7 @@
 
 - 所有坐标/字号默认值按 **1920×1080** 画布标定（`base/01 theme` 的 `W/H/FPS` 常量可自取）；换画布尺寸时缩放外层容器或改 props
 - 动画**只依赖当前帧号**（`useCurrentFrame`），时间参数一律用**帧**；在 `<Series.Sequence>` 或 `<AbsoluteFill>` 里都是本地帧，无外部时钟
-- **依赖规则**：除 `audio/`（音频件）、`media/`（素材消费件）和 `scripts/` 外，所有组件都依赖 `base/01 theme`；库内 import 一律写成同目录形式（`./theme`、`./timeline`…）。接入项目时把这些文件放同一目录，或统一改 import 路径
+- **依赖规则**：除 `audio/`（音频件）、`media/`（素材消费件）、`scripts/`、`transitions/`（依赖已装的 `@remotion/transitions`）和 `effects/07 Spotlight`（自包含）外，所有组件都依赖 `base/01 theme`；库内 import 一律写成同目录形式（`./theme`、`./timeline`…）。接入项目时把这些文件放同一目录，或统一改 import 路径
 - **例外：`cinema/` 是自带独立 theme 的整套深色电影感套件**（提取自 ConcurrentArt 成片），组件只 import 本目录的 `cinema/01 theme.ts`，与 `base/01` 不混用；拷贝时整个 cinema/ 目录一起带，不需要 base/theme.ts（字体仍用 `base/02 fonts.ts`）
 - 少数文件之间有依赖，各文件头注释和分类 AGENTS.md 已标明，拷贝时一起带上
 - 依赖版本：`remotion@4.0.535 @remotion/cli@4.0.535 react@19.1.0 react-dom@19.1.0`，dev 依赖 `@remotion/bundler @remotion/renderer` 同版本；`tsconfig.json` 的 `lib` 需含 `"DOM", "DOM.Iterable"`
@@ -50,6 +50,13 @@
 | effects/04 | Draw.tsx | 描画：SVG 路径按帧从起点画到终点（常驻），百分比坐标铺满父容器 |
 | effects/05 | Particles.tsx | 微粒：n 颗圆点在指定区域上浮摇摆（常驻氛围层），seed 可复现 |
 | effects/06 | Confetti.tsx | 彩带：n 片彩纸从炸点抛物线喷出翻转飘落，约 lifetime 帧自灭 |
+| effects/07 | Spotlight.tsx | 特效：追光搜寻甩动后落定照亮 children，深色舞台开场，自包含 |
+| transitions/01 | WhipPan.tsx | 转场：甩镜，两场同向高速滑过 + 拖影运动模糊 |
+| transitions/02 | LightLeak.tsx | 转场：暖光斑漂入、切换点烧白、缓慢冷却，硬切藏在过曝下 |
+| transitions/03 | IrisWipe.tsx | 转场：圆形光圈收成点再张开，圆心/停留半径可调 |
+| transitions/04 | ZoomBlur.tsx | 转场：缩放虚化推拉，最轻量的镜头推拉语法 |
+| transitions/05 | PageTurn.tsx | 转场：翻页绕底角掀起旋出，poses 停格顿挫 |
+| transitions/06 | Hyperspace.tsx | 转场：星场加速成流线 + 白闪切换 + 缓焦落定，seed 可复现 |
 | motion/01 | usePop.ts | hook：第 at 帧弹簧 0→1（弹出缩放） |
 | motion/02 | useFade.ts | hook：区间淡入淡出 0~1 |
 | media/01 | Icon.tsx | 图标：public/icons/ 的 SVG 单色上色（mask 原理），由 scripts/03 拉取 |
