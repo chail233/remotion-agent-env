@@ -2,7 +2,7 @@
 
 用于**任意类型** Remotion 视频的通用组件集，一个组件一个文件，按用途分类。每个组件都是纯参数驱动的渲染件：位置、尺寸、颜色、时间全是 props 或 props 化的常量，**怎么排布、用在什么题材由使用者决定**，本库不预设版式。
 
-本文档面向 Agent：只描述「组件是什么、参数含义、内部行为」，不规定使用方式。选型看各分类 AGENTS.md 里的外观描述表。
+本文档面向 Agent：只描述「组件是什么、参数含义、内部行为」，不规定使用方式。选型看各分类 AGENTS.md 里的外观描述表；**节奏、拍点、构图等创作规则看 PLAYBOOK.md**。
 
 **选择性使用**：本库是工具箱不是模板——按需取用，可用一部分、全不用，也可改样式、拆件或重新组合。组件的默认外观与既有搭配**不应影响原设计与创意**：先有创作方案，再决定组件如何服务于它；方案与组件冲突时改组件，而不是迁就组件改方案。
 
@@ -31,6 +31,7 @@
 | scene/03 | Stage.tsx | 面板：半透明圆角矩形，裁切超出内容，位置尺寸任意 |
 | scene/04 | LightBg.tsx | 背景：暖纸底 + 三团漂移光斑 + 点阵 + 旋转角饰，亮色完整背景栈 |
 | scene/05 | DuoPanel.tsx | 面板：左右双色对比面板（图标座 + 小字 + 标题）+ 中央脊线 |
+| chart/01 | BarChart.tsx | 图表：柱状图逐根弹簧生长，数值/标签随柱浮出，纯 SVG |
 | code-display/01 | timeline.ts | 逻辑：打字时间轴排期工具（typeLines/doneAt…），无渲染 |
 | code-display/02 | colorize.tsx | 逻辑：TS 语法高亮 + 着色文本渲染 |
 | code-display/03 | WindowChrome.tsx | 窗口：macOS 风格深色外框，可装任意内容 |
@@ -42,11 +43,13 @@
 | text/04 | Tag.tsx | 标签：彩色描边胶囊（行内元素） |
 | text/05 | StatBar.tsx | 数值：进度条 + 标签 + 读数，value 外部驱动 |
 | text/06 | Typewriter.tsx | 打字机：任意文本逐字打出 + 闪烁光标，打完常驻 |
+| text/07 | Karaoke.tsx | 卡拉OK字幕：逐词扫色/浮出两种模式，词级帧区间驱动 |
 | effects/01 | HeartBurst.tsx | 特效：爱心从一点炸开上飘（约 70 帧自灭） |
 | effects/02 | Sparkles.tsx | 特效：星光绕圈扩散自转（约 50 帧自灭） |
 | effects/03 | HeartShape.tsx | 形状：单个爱心 SVG，静态件 |
 | effects/04 | Draw.tsx | 描画：SVG 路径按帧从起点画到终点（常驻），百分比坐标铺满父容器 |
 | effects/05 | Particles.tsx | 微粒：n 颗圆点在指定区域上浮摇摆（常驻氛围层），seed 可复现 |
+| effects/06 | Confetti.tsx | 彩带：n 片彩纸从炸点抛物线喷出翻转飘落，约 lifetime 帧自灭 |
 | motion/01 | usePop.ts | hook：第 at 帧弹簧 0→1（弹出缩放） |
 | motion/02 | useFade.ts | hook：区间淡入淡出 0~1 |
 | media/01 | Icon.tsx | 图标：public/icons/ 的 SVG 单色上色（mask 原理），由 scripts/03 拉取 |

@@ -8,6 +8,7 @@
 | text/04 | Tag.tsx | 标签 | 彩色描边胶囊（14% 底色 + 50% 描边），24px 粗体 |
 | text/05 | StatBar.tsx | 数值条 | 标签 + 右端读数 + 22px 高渐变填充条 |
 | text/06 | Typewriter.tsx | 打字机 | 任意文本逐字打出 + 闪烁光标（▍），打完常驻 |
+| text/07 | Karaoke.tsx | 卡拉OK字幕 | 逐词扫色填亮（fill）或逐词浮出（appear），词级帧区间驱动 |
 
 均依赖 `./theme`；`01 Captions` 另依赖 `./RichText`。
 
@@ -50,3 +51,15 @@
 `{text, delay=0, per=4, cursor=true, cursorColor=inkSoft, style}`。第 `delay` 帧起每 `per` 帧出一个字（按码点切分，中文/emoji 都安全），打完常驻；`cursor` 显示闪烁光标（▍，打完自动消失）。只是个内联 flex 文字块，定位、字号、退出都靠 `style` 和外层控制。
 
 与 03 Bubble 的区别：无气泡无退场；与 code-display 打字系列的区别：不挑内容，任何字符串都能打。
+
+## 07 Karaoke.tsx — 卡拉OK逐词字幕
+
+```tsx
+<Karaoke words={[["数据", 30, 60], ["不会说谎", 60, 96], ["，但会隐藏", 96, 132]]} />
+```
+
+`words: [文本, 起帧, 止帧][]`（词区间互不重叠，按口语/唱词速度划）。两种 `mode`：
+- **fill**（默认）：全部词常驻，当前词从左到右扫色填亮（clipPath），过去的词保持高亮色——唱词、旁白强调。
+- **appear**：未到的词隐藏，当前词轻微弹出（4 帧收敛）——TikTok 式跟随口播。
+
+`{color=ink, activeColor=gold, fontSize=64, fontWeight=800, fontFamily, style}`。整行由 `style` 定位；词级时间可从 whisper/`@remotion/captions` 的词戳按 `帧 = 秒 × FPS` 换算。
