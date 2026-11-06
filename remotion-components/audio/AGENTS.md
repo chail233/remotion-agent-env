@@ -3,6 +3,9 @@
 | 编号 | 文件 | 说明 |
 |---|---|---|
 | audio/01 | Sfx.tsx | 第 at 帧播放 public/sfx/<name>.wav |
+| audio/02 | Bgm.tsx | BGM 音量包络：淡入/淡出锚定合成总长 |
+
+两个组件都不依赖 theme，也不占画布布局。
 
 ## 01 Sfx.tsx
 
@@ -31,4 +34,10 @@
 | `flip` | 短促翻动声 | 翻卡片 |
 | `shatter` | 玻璃碎片叮当 | 破碎、消散 |
 
-BGM 不由本组件负责：`<Html5Audio src={staticFile("bgm.wav")} />` 挂在合成最外层，音量自定（见根 AGENTS.md）。
+## 02 Bgm.tsx
+
+```tsx
+<Bgm />  {/* 挂在合成最外层；等价 <Bgm src="bgm.wav" volume={0.95} fadeIn={30} fadeOut={120} /> */}
+```
+
+音量沿包络走：前 `fadeIn` 帧从 0 淡入到 `volume`，合成结尾前 `fadeOut` 帧淡出到 0（锚点取 `useVideoConfig` 的总时长，换片长不用改参数）。wav 用 scripts/01 生成；音量参考：0.55 时整片约 -19 LUFS。

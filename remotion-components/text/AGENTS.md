@@ -7,6 +7,7 @@
 | text/03 | Bubble.tsx | 气泡 | 白色圆角对话气泡 + 三角尾巴，逐字出现 |
 | text/04 | Tag.tsx | 标签 | 彩色描边胶囊（14% 底色 + 50% 描边），24px 粗体 |
 | text/05 | StatBar.tsx | 数值条 | 标签 + 右端读数 + 22px 高渐变填充条 |
+| text/06 | Typewriter.tsx | 打字机 | 任意文本逐字打出 + 闪烁光标（▍），打完常驻 |
 
 均依赖 `./theme`；`01 Captions` 另依赖 `./RichText`。
 
@@ -39,3 +40,13 @@
 `{label, value, max=100, color=rose, width=420, x, y, icon}`，`icon` 走 emoji 字体。
 
 **本身不做动画**：`value` 由调用方用 `interpolate` 驱动（例：`interpolate(frame, [300, 500], [30, 80], clamp)`），进度条永远和帧号同步。
+
+## 06 Typewriter.tsx — 打字机
+
+```tsx
+<Typewriter text="正在读取记忆……" delay={30} per={3} />
+```
+
+`{text, delay=0, per=4, cursor=true, cursorColor=inkSoft, style}`。第 `delay` 帧起每 `per` 帧出一个字（按码点切分，中文/emoji 都安全），打完常驻；`cursor` 显示闪烁光标（▍，打完自动消失）。只是个内联 flex 文字块，定位、字号、退出都靠 `style` 和外层控制。
+
+与 03 Bubble 的区别：无气泡无退场；与 code-display 打字系列的区别：不挑内容，任何字符串都能打。

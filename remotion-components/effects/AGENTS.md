@@ -1,12 +1,14 @@
 # effects/ — 一过性特效
 
-短时自发动画：给 `at`（开始帧）和 `x, y`（父容器坐标）就自己演完并消失，**不用管结束时间**。均依赖 `./theme`；`01 HeartBurst` 另依赖 `./HeartShape`。
+短时自发动画：给 `at`（开始帧）和 `x, y`（父容器坐标）就自己演完并消失，**不用管结束时间**（04/05 例外，是常驻件）。均依赖 `./theme`；`01 HeartBurst` 另依赖 `./HeartShape`。
 
 | 编号 | 文件 | 长什么样 | 时长 |
 |---|---|---|---|
 | effects/01 | HeartBurst.tsx | 十几颗粉/玫红爱心从一点向四周炸开、边散边上飘，缓出曲线 | 约 70 帧 |
 | effects/02 | Sparkles.tsx | 金/白四角星绕一圈向外扩散并自转，闪完后消失 | 约 50 帧 |
 | effects/03 | HeartShape.tsx | 单个 SVG 爱心，静态形状件 | 不限 |
+| effects/04 | Draw.tsx | SVG 路径描画：从起点画到终点，画完常驻 | `dur` 帧后常驻 |
+| effects/05 | Particles.tsx | 确定性上升微粒场，常驻氛围层 | 常驻 |
 
 ## 01 HeartBurst.tsx — 爱心炸开
 
@@ -20,5 +22,13 @@
 ## 03 HeartShape.tsx — 单个爱心
 
 `{size, color=rose, style}`（viewBox 坐标系）。做常驻爱心或自定义轨迹动画时用它；01 内部复用的也是它。
+
+## 04 Draw.tsx — 路径描画（常驻件）
+
+`{d, w=3, color=ink, delay=0, dur=30, dash="300", style}`。`d` 是 SVG path 字符串，**0~100 百分比坐标系**；组件绝对定位铺满父容器（父容器需有定位上下文），`preserveAspectRatio="none"` + non-scaling-stroke 让路径随容器拉伸、线宽不变形。第 `delay` 帧起 `dur` 帧内从起点画到终点，之后常驻。路径很长画不满时把 `dash` 调大（须 ≥ 路径实长）。
+
+## 05 Particles.tsx — 微粒场（常驻件）
+
+`{n=24, seed=1, color=ink, area=全屏, size=6, speed=1, opacity=0.25}`。`n` 颗圆点在 `area`（画布像素坐标 `{x,y,w,h}`）内缓缓上浮 + 左右摇摆，透明度按正弦呼吸；形态由 `seed` 决定（remotion `random`，同 seed 可复现）。常垫在内容层之下铺氛围。
 
 提醒：特效放在带 overflow:hidden 的面板（scene/03 Stage）里会被裁边，超出面板的粒子要挂在外面。
