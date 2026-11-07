@@ -11,6 +11,7 @@
 - 渲染产物放 `out/`（已 gitignore）；静态资源放 `public/`
 - 系统字体可用（如 Microsoft YaHei）；`@remotion/google-fonts` 的 Inter 不含中日韩字形
 - `remotion-components/`：本地通用组件库（非 npm 包），可选用，见下节
+- `skills/`：Agent 技能库（Remotion 官方技能 + remotion-bits），见下节
 
 ## 命令
 
@@ -53,6 +54,17 @@
   生成的素材不进 git，按需重跑再生成；来源与许可见各目录下的 licenses.json / manifest.json。管线的完整参数说明在 `remotion-components/scripts/AGENTS.md`，消费组件（上色/播放/铺底）在 `remotion-components/media/AGENTS.md`。
 
 - `npm run format` 已用 `.prettierignore` 跳过 `remotion-components/`，不会改写库本体。
+
+## 技能库 skills/
+
+`skills/` 存放 Agent 技能，每个子目录一个，入口是 `SKILL.md`（目录与用途总表、来源出处见 `skills/README.md`）。**接到任务后，动手前先到这里查有无对应技能：命中就先读完该技能的 `SKILL.md` 及其引用的专题卡，再按里面的做法做。**
+
+- **Remotion 官方 13 个**（vendor 自 [remotion-dev/skills](https://github.com/remotion-dev/skills) @ `a2824c6`）：
+  - `remotion-best-practices`：总纲，内嵌其余技能的完整副本，不确定用哪个就读它
+  - 常用：`remotion-create`（新建项目/合成）、`remotion-markup`（合成/动画/媒体/音频/字体/时序/转场等 30+ 专题卡）、`remotion-studio`（起预览）、`remotion-render`（渲染视频/静帧）
+  - 专项：`remotion-maps`（地图动画）、`remotion-captions`（字幕）、`remotion-interactivity`（Studio 内可交互）、`remotion-docs`（检索官方文档）、`remotion-multimedia`（Mediabunny 取媒体元数据）、`remotion-saas`（应用集成架构）、`remotion-upgrade`（升级）、`remotion-license`（许可证）
+- **remotion-bits**：示例优先的创作工作流（MCP → CLI → 直读目录的回退链），出处见其 `SKILL.md`。
+- 技能是文档不是代码：用法是按需读文件，不参与构建、不可 import。技能内的命令是通用写法（`npx remotion …`），在本环境对应上表中的 `npm run …`。
 
 ## 渲染异常排查
 
