@@ -32,7 +32,7 @@
 本地组件库（不是 npm 包）：`base` 主题/字体、`scene` 背景/外壳/面板、`text` 字幕/气泡/标签/进度条、`code-display` 代码与终端窗口、`effects` 粒子、`motion` hook、`media` 图标/Lottie/纹理消费件、`audio` 音效、`cinema` 深色电影感套件、`scripts` 素材生成与批量预览。总目录见 `remotion-components/AGENTS.md`，各分类目录下另有外观说明表。创作规则（节奏/拍点/构图/反模式）见 `remotion-components/PLAYBOOK.md`；外部配方卡与审美准则全文在 `recipes/`（按需查阅）。
 
 - **按需取用**：它是工具箱不是模板。可以只用一部分、完全不用，也可以把文件拷进 `src/` 后随意改样式、拆件、重组。库的默认外观不构成对创意与设计的约束——方案与组件冲突时改组件。
-- **不参与 `npm run typecheck`**：库内 import 写成同目录形式（`./theme`），放在原目录解析不到；拷进 `src/` 的同一目录（或统一改 import 路径）后即纳入检查。拷贝时 `base/theme.ts` 基本必带；`code-display/` 还依赖 `timeline.ts` 与 `colorize.tsx`；`cinema/` 自带独立 theme 整目录一起拷；`media/` 免 theme 但素材要先用脚本生成到 public/。
+- **可直接引用，也可拷进 `src/` 改**：库内 import 写成同目录形式（`./theme`），原地可解析——演示合成就是直接从 `src/Root.tsx` 引用 `remotion-components/` 的（这些文件因此被 `npm run typecheck` 传递检查）。想改样式/拆件时把文件拷进 `src/` 的同一目录再动。拷贝时 `base/theme.ts` 基本必带；`code-display/` 还依赖 `timeline.ts` 与 `colorize.tsx`；`cinema/` 自带独立 theme 整目录一起拷；`media/` 免 theme 但素材要先用脚本生成到 public/。
 - **依赖已就绪**：`scripts/stills.mjs` 需要的 `@remotion/bundler`、`@remotion/renderer`（4.0.535）已装并在 package.json 里声明。
 - **字体素材**：`base/fonts.ts` 读 `public/fonts/NotoSansSC-VF.ttf`、`NotoSerifSC-VF.ttf`、`CascadiaCode.ttf`，本机 `C:\Windows\Fonts` 三个都在，需要时自行拷入：
 

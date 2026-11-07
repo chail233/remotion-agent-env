@@ -6,15 +6,23 @@ import {
   useCurrentFrame,
   useVideoConfig,
 } from "remotion";
-import { loadFonts } from "./fonts";
-import { Icon } from "./media/Icon";
-import { LottieAnim } from "./media/LottieAnim";
-import { Texture } from "./media/Texture";
-import { Captions, type Cap } from "./cinema/Captions";
-import { Reveal, Words } from "./cinema/Reveal";
-import { Phase, PulseLine, SceneShell } from "./cinema/SceneShell";
-import { ChapterMark, CodeChip, Counter, Dot, DotChip, Kicker, Panel } from "./cinema/UI";
-import { FPS, H, theme, W } from "./cinema/theme";
+import { loadFonts } from "../remotion-components/base/fonts";
+import { Icon } from "../remotion-components/media/Icon";
+import { LottieAnim } from "../remotion-components/media/LottieAnim";
+import { Texture } from "../remotion-components/media/Texture";
+import { Captions, type Cap } from "../remotion-components/cinema/Captions";
+import { Reveal, Words } from "../remotion-components/cinema/Reveal";
+import { Phase, PulseLine, SceneShell } from "../remotion-components/cinema/SceneShell";
+import {
+  ChapterMark,
+  CodeChip,
+  Counter,
+  Dot,
+  DotChip,
+  Kicker,
+  Panel,
+} from "../remotion-components/cinema/UI";
+import { FPS, H, theme, W } from "../remotion-components/cinema/theme";
 
 loadFonts();
 
