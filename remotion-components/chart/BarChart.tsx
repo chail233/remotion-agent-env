@@ -3,7 +3,7 @@
 // 依赖：base/theme.ts。宽高即容器尺寸，放哪由外层定位。
 import React from "react";
 import { spring, useCurrentFrame, useVideoConfig } from "remotion";
-import { C, F, hexA } from "./theme";
+import { C, F, hexA } from "../base/theme";
 
 export const BarChart: React.FC<{
   data: { label: string; value: number }[];

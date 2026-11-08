@@ -1,9 +1,9 @@
 // scene/04 LightBg.tsx — 亮色完整背景栈：暖纸底 + 三团缓慢漂移的模糊光斑（可配色）+
-// 细点阵网格 + 两角缓慢旋转的几何线稿装饰。与 cinema/02 深色背景栈互为亮/暗两版。
+// 细点阵网格 + 两角缓慢旋转的几何线稿装饰。
 // 所有漂移都是帧号的确定性函数，可复现。依赖：base/theme.ts。坐标按 1920×1080 标定。
 import React from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { C, hexA } from "./theme";
+import { C, hexA } from "../base/theme";
 
 export const LightBg: React.FC<{
   /** 左上大光斑色（默认 clay 陶土橙） */

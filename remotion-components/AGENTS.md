@@ -10,8 +10,7 @@
 
 - 所有坐标/字号默认值按 **1920×1080** 画布标定（`base/01 theme` 的 `W/H/FPS` 常量可自取）；换画布尺寸时缩放外层容器或改 props
 - 动画**只依赖当前帧号**（`useCurrentFrame`），时间参数一律用**帧**；在 `<Series.Sequence>` 或 `<AbsoluteFill>` 里都是本地帧，无外部时钟
-- **依赖规则**：除 `audio/`（音频件）、`media/`（素材消费件）、`scripts/`、`transitions/`（依赖已装的 `@remotion/transitions`）和 `effects/07 Spotlight`（自包含）外，所有组件都依赖 `base/01 theme`；库内 import 一律写成同目录形式（`./theme`、`./timeline`…）。接入项目时把这些文件放同一目录，或统一改 import 路径
-- **例外：`cinema/` 是自带独立 theme 的整套深色电影感套件**（提取自 ConcurrentArt 成片），组件只 import 本目录的 `cinema/01 theme.ts`，与 `base/01` 不混用；拷贝时整个 cinema/ 目录一起带，不需要 base/theme.ts（字体仍用 `base/02 fonts.ts`）
+- **依赖规则**：除 `audio/`（音频件）、`media/`（素材消费件）、`scripts/`、`transitions/`（依赖已装的 `@remotion/transitions`）和 `effects/07 Spotlight`（自包含）外，所有组件都依赖 `base/01 theme`；跨分类依赖统一写 `../base/theme`（同目录依赖如 `./timeline` 保持同目录形式），**整库原地可解析**。拷进项目时整目录拷走，或拷后统一改 import 路径
 - 少数文件之间有依赖，各文件头注释和分类 AGENTS.md 已标明，拷贝时一起带上
 - 依赖版本：`remotion@4.0.535 @remotion/cli@4.0.535 react@19.1.0 react-dom@19.1.0`，dev 依赖 `@remotion/bundler @remotion/renderer` 同版本；`tsconfig.json` 的 `lib` 需含 `"DOM", "DOM.Iterable"`
 
@@ -21,12 +20,6 @@
 |---|---|---|
 | base/01 | theme.ts | 配色/字体/画布常量 + hexA/clamp 工具，全库必带 |
 | base/02 | fonts.ts | loadFonts()：加载中/西/代码三套字体 |
-| cinema/01 | theme.ts | cinema 套件独立 token：深色配色/字体/缓动/弹簧 + alpha/glow |
-| cinema/02 | Background.tsx | 背景：深色底 + 漂移光斑 + 点阵网格 + 尘埃；调色/颗粒/暗角收尾层 |
-| cinema/03 | Reveal.tsx | 动效：单弹簧入场、逐字级联标题、场景末尾加速退场 |
-| cinema/04 | SceneShell.tsx | 外壳：五层深色场景壳 + 慢视差；Phase 时间窗块；脉冲连线 |
-| cinema/05 | UI.tsx | 部件：发光胶囊/终端芯片/滚动数字/眉题/章节标/玻璃卡片/辉光点 |
-| cinema/06 | Captions.tsx | 字幕：深色玻璃胶囊字幕条（全局帧，放 Sequence 外） |
 | scene/01 | Paper.tsx | 背景：米白底 + 淡棕方格线，全屏 |
 | scene/03 | Stage.tsx | 面板：半透明圆角矩形，裁切超出内容，位置尺寸任意 |
 | scene/04 | LightBg.tsx | 背景：暖纸底 + 三团漂移光斑 + 点阵 + 旋转角饰，亮色完整背景栈 |
@@ -59,24 +52,24 @@
 | transitions/06 | Hyperspace.tsx | 转场：星场加速成流线 + 白闪切换 + 缓焦落定，seed 可复现 |
 | motion/01 | usePop.ts | hook：第 at 帧弹簧 0→1（弹出缩放） |
 | motion/02 | useFade.ts | hook：区间淡入淡出 0~1 |
-| media/01 | Icon.tsx | 图标：public/icons/ 的 SVG 单色上色（mask 原理），由 scripts/03 拉取 |
-| media/02 | LottieAnim.tsx | 动效：嵌入 Lottie JSON，进度跟时间轴，由 scripts/04 下载 |
-| media/03 | Texture.tsx | 纹理：public/textures/ 的 SVG 铺底可漂移，由 scripts/05 生成 |
-| audio/01 | Sfx.tsx | 音效：第 at 帧播 public/sfx/<name>.wav（12 种） |
+| media/01 | Icon.tsx | 图标：public/icons/ 的 SVG 单色上色（mask 原理），由 scripts/02 拉取 |
+| media/02 | LottieAnim.tsx | 动效：嵌入 Lottie JSON，进度跟时间轴，由 scripts/03 下载 |
+| media/03 | Texture.tsx | 纹理：public/textures/ 的 SVG 铺底可漂移，由 scripts/04 生成 |
+| audio/01 | Sfx.tsx | 音效：第 at 帧播 public/sfx/<name>.wav（name = 放进去的文件名，文件自备） |
 | audio/02 | Bgm.tsx | 音乐：BGM 音量包络，淡入/淡出锚定合成总长，挂合成最外层 |
-| scripts/01 | make-audio.mjs | CLI：程序化合成 BGM + 12 音效 wav（无版权素材） |
-| scripts/02 | stills.mjs | CLI：打包一次批量抽指定帧预览图 |
-| scripts/03 | fetch-icons.mjs | CLI：Iconify 拉图标 SVG + 许可登记 → public/icons |
-| scripts/04 | fetch-lottie.mjs | CLI：下载 Lottie JSON + 来源/许可登记 → public/lottie |
-| scripts/05 | make-textures.mjs | CLI：seed 确定性生成 7 种纹理 SVG → public/textures |
+| scripts/01 | stills.mjs | CLI：打包一次批量抽指定帧预览图 |
+| scripts/02 | fetch-icons.mjs | CLI：Iconify 拉图标 SVG + 许可登记 → public/icons |
+| scripts/03 | fetch-lottie.mjs | CLI：下载 Lottie JSON + 来源/许可登记 → public/lottie |
+| scripts/04 | make-textures.mjs | CLI：seed 确定性生成 7 种纹理 SVG → public/textures |
+| scripts/05 | fetch-sfx.mjs | CLI：Lots of Sounds 下载 CC0 音效 mp3 + 许可登记 → public/sfx |
 
 ## 接入新项目（Agent 操作清单）
 
-1. 拷 `base/theme.ts`、`base/fonts.ts` + 需要的组件文件进项目（同目录摆放则 import 不用改）
-2. `scripts/*.mjs` 拷到项目根目录，`node scripts/make-audio.mjs --out public --duration <总秒数>` 生成 `public/bgm.wav` 和 `public/sfx/*.wav`
+1. 把需要的分类目录整目录拷进项目（跨分类 import 指向 `../base/theme`，保持目录结构即可），或拷散文件后统一改 import 路径
+2. `scripts/*.mjs` 拷到项目根目录，按第 5 步的管线生成/拉取素材；音效与 BGM 文件自备或下载（见 `audio/AGENTS.md` 03 节）
 3. 字体：从 `C:\Windows\Fonts` 拷 `NotoSansSC-VF.ttf`、`NotoSerifSC-VF.ttf`、`CascadiaCode.ttf` 进 `public/fonts/`，在根组件模块顶层调用一次 `loadFonts()`；不需要这套字体就不装，组件会走 F 里的系统回退
 4. BGM 用 `audio/02 Bgm` 挂在合成最外层（`<Bgm />`，默认 public/bgm.wav，音量/淡入淡出可调；0.55 时整片约 -19 LUFS）
-5. **美术素材走三条管线**（见 `media/AGENTS.md` 与 `scripts/AGENTS.md` 03–05），产出到 public/ 后用 `media/01–03` 组件消费；生成/下载的素材**不进 git**，clone 后按需重跑脚本；正式使用前核对各清单文件里的 license 字段
+5. **美术素材走三条管线**（见 `media/AGENTS.md` 与 `scripts/AGENTS.md` 02–04），产出到 public/ 后用 `media/01–03` 组件消费；生成/下载的素材**不进 git**，clone 后按需重跑脚本；正式使用前核对各清单文件里的 license 字段
 
 ## 技术备忘（与用法无关的事实）
 

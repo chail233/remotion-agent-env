@@ -1,7 +1,7 @@
 // 数值进度条：标签 + 右端数值 + 渐变填充条。位置尺寸由 x/y/width 决定，本身不做动画——
 // value 由调用方驱动（传 interpolate 结果即可与帧号同步）。依赖：base/theme.ts。
 import React from "react";
-import { C, F, hexA } from "./theme";
+import { C, F, hexA } from "../base/theme";
 
 export const StatBar: React.FC<{
   label: string;

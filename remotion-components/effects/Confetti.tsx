@@ -3,7 +3,7 @@
 // 一过性特效：只管给 at，结束不用管。依赖：base/theme.ts（默认色板）。
 import React from "react";
 import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
-import { C } from "./theme";
+import { C } from "../base/theme";
 
 export const CONFETTI_COLORS = [C.clay, C.pink, C.gold, C.mint, C.sky, C.violet];
 

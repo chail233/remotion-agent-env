@@ -18,5 +18,5 @@
 `{data, width=1000, height=520, barColor=clay, delay=0, stagger=5, showValues=true, style}`。`data` 是 `{label, value}[]`；第 1 根柱第 `delay` 帧起生长，之后每根错峰 `stagger` 帧（damping 12 / stiffness 100）。定位靠 `style`（组件本体是 absolute 容器，宽高即 props）。
 
 - `showValues`：柱顶 mono 数值随柱浮出（自动 toLocaleString）
-- 数值条/读数类需求看 text/05 StatBar；滚动数字在 cinema/05 Counter
+- 数值条/读数类需求看 text/05 StatBar；滚动数字库里没有，按需自建
 - 创作提示：柱子出现顺序按数据叙事排（先主角后对比），stagger 5~8 帧手感自然，别让全部柱同帧炸出

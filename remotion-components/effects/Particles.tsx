@@ -3,7 +3,7 @@
 // 同 seed 同形态，渲染可复现）。常垫在内容层之下铺氛围。依赖：base/theme.ts（默认色/画布）。
 import React from "react";
 import { AbsoluteFill, random, useCurrentFrame } from "remotion";
-import { C, H, W } from "./theme";
+import { C, H, W } from "../base/theme";
 
 export const Particles: React.FC<{
   n?: number;

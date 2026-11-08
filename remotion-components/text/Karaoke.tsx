@@ -4,7 +4,7 @@
 // 词级时间可从 @remotion/captions 的 words 或 whisper 词戳换算成帧。依赖：base/theme.ts。
 import React from "react";
 import { interpolate, useCurrentFrame } from "remotion";
-import { C, F, clamp } from "./theme";
+import { C, F, clamp } from "../base/theme";
 
 export type KaraokeWord = [text: string, from: number, to: number];
 

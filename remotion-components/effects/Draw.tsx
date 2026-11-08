@@ -4,7 +4,7 @@
 // 让路径随容器拉伸、线宽不变形。依赖：base/theme.ts（默认色）。
 import React from "react";
 import { Easing, interpolate, useCurrentFrame } from "remotion";
-import { C, clamp } from "./theme";
+import { C, clamp } from "../base/theme";
 
 export const Draw: React.FC<{
   /** SVG path 的 d 字符串（0~100 百分比坐标系，如 "M10,50 Q50,5 90,50"） */

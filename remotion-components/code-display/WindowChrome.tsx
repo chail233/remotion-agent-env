@@ -1,7 +1,7 @@
 // macOS 风格深色窗口外框：三个圆点 + 居中标题，CodeWindow/ConsoleWindow 共用，
 // 也可以单独拿来装别的内容。内容区在标题栏（44px）下方。依赖：base/theme.ts。
 import React from "react";
-import { C, F } from "./theme";
+import { C, F } from "../base/theme";
 
 export const WindowChrome: React.FC<{
   x: number;

@@ -22,7 +22,7 @@
 
 ## 04 LightBg.tsx — 亮色背景栈
 
-导出 `LightBg`。依赖 `./theme`。与 cinema/02 深色背景栈互为亮/暗两版，单独铺底即得完整画面。
+导出 `LightBg`。依赖 `./theme`。单独铺底即得完整画面。
 
 ```tsx
 <LightBg />  {/* 或 <LightBg tintA={C.clay} tintB={C.sky} tintC={C.gold} /> */}

@@ -1,7 +1,7 @@
 // 单个爱心 SVG（viewBox 坐标系，color 默认玫红）。尺寸由 size 控制，定位用 style 传入。
 // 依赖：base/theme.ts。
 import React from "react";
-import { C } from "./theme";
+import { C } from "../base/theme";
 
 export const HeartShape: React.FC<{
   size: number;

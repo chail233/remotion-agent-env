@@ -3,7 +3,7 @@
 // 默认水平居中、y=968（1920×1080 下靠近底部），用 y/style 放画面任意位置。依赖：base/theme.ts、text/RichText.tsx。
 import React from "react";
 import { interpolate, useCurrentFrame } from "remotion";
-import { C, F, clamp } from "./theme";
+import { C, F, clamp } from "../base/theme";
 import { RichText } from "./RichText";
 
 export type Cap = [number, number, string];

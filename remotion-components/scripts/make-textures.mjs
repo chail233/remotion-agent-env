@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// make-textures.mjs — 程序化生成背景/装饰纹理 SVG 到 public/textures/，与 make-audio.mjs 同一哲学：
+// make-textures.mjs — 程序化生成背景/装饰纹理 SVG 到 public/textures/，与程序化音效合成同一哲学：
 // 纯代码合成、seed 确定性（同参数永远同产物）、零第三方依赖、无版权素材。不进 git，按需再生成。
 //
 // 用法：

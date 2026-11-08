@@ -3,7 +3,7 @@
 // 依赖：base/theme.ts、effects/HeartShape.tsx。
 import React from "react";
 import { interpolate, random, useCurrentFrame } from "remotion";
-import { C, clamp } from "./theme";
+import { C, clamp } from "../base/theme";
 import { HeartShape } from "./HeartShape";
 
 export const HeartBurst: React.FC<{

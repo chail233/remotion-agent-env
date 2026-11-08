@@ -1,7 +1,7 @@
 // 舞台：半透明圆角面板，位置尺寸任意（默认 (1060, 90, 800, 850)），内部坐标相对面板左上角，
 // 超出部分会被 overflow:hidden 裁掉。依赖：base/theme.ts。
 import React from "react";
-import { C, hexA } from "./theme";
+import { hexA } from "../base/theme";
 
 export const Stage: React.FC<{
   x?: number;

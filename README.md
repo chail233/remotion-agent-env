@@ -4,7 +4,7 @@
 克隆即用：依赖已锁版本、渲染用浏览器自动下载、Agent 的操作说明放在 `AGENTS.md`。
 
 A ready-to-use Remotion workspace intended for AI agents to author and render animations in.
-It ships the toolchain, a component library, asset pipelines and two demo compositions (`CinemaKitDemo`, `MediaKitDemo`) as living examples.
+It ships the toolchain, a component library, asset pipelines and two demo compositions (`CoreKitDemo`, `MediaKitDemo`) as living examples.
 
 ## 快速开始
 
@@ -20,7 +20,7 @@ npm run dev                   # Studio，默认 http://localhost:3000
 
 | 组成                                                                                                                   | 说明                                            |
 | ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| `remotion` + `@remotion/cli` / `bundler` / `renderer` / `player` / `transitions` / `google-fonts` / `media` / `lottie` | 全部 **4.0.535**，Remotion 要求各包与主包同版本 |
+| `remotion` + `@remotion/cli` / `bundler` / `renderer` / `player` / `transitions` / `google-fonts` / `media` / `lottie` / `sfx` / `shapes` | 全部 **4.0.535**，Remotion 要求各包与主包同版本 |
 | React 19.3 / TypeScript 5.9 / zod 4.5.4                                                                                | zod 版本由 Remotion 锁定，不要手动升            |
 | Chrome Headless Shell                                                                                                  | 落在 `node_modules/.remotion/`，不进仓库        |
 | `remotion-components/`                                                                                                 | 本地通用组件库，**可选用**，见下文              |
@@ -54,18 +54,17 @@ AGENTS.md                给 Agent 读的环境说明
 
 ## remotion-components —— 可选用的组件库
 
-`remotion-components/` 是一份参数驱动的通用组件集（主题与字体、背景/外壳/面板、字幕/气泡/标签/进度条、代码与终端窗口、粒子特效、像素角色、动效 hook、图标/Lottie/纹理消费件、音效、深色电影感套件、素材与批量预览脚本）。总目录见 `remotion-components/AGENTS.md`，每个分类目录下另有外观说明表。
+`remotion-components/` 是一份参数驱动的通用组件集（主题与字体、背景/外壳/面板、字幕/气泡/标签/进度条、代码与终端窗口、图表、粒子特效、转场、动效 hook、图标/Lottie/纹理消费件、音效播放、素材与批量预览脚本）。总目录见 `remotion-components/AGENTS.md`，每个分类目录下另有外观说明表。
 
 用法上的三个事实：
 
 - **工具箱不是模板**：可以只用一部分、完全不用，也可以拷进 `src/` 之后随意改样式、拆件、重组。它的默认外观不应影响你的设计与创意。
-- **不参与 `npm run typecheck`**：库内 import 写成同目录形式（`./theme`），放在原目录解析不到；拷进 `src/` 同一目录（或统一改 import 路径）后即纳入检查。拷贝时 `base/theme.ts` 基本必带；`code-display/` 还依赖 `timeline.ts` 与 `colorize.tsx`；`cinema/` 自带独立 theme 整目录一起拷；`media/` 免 theme 但素材要先用脚本生成。
+- **整库原地可解析**：库内跨分类依赖统一写 `../base/theme`，演示合成直接从 `src/Root.tsx` 引用库文件，`npm run typecheck` 覆盖全部被引用组件。拷进项目时整目录拷走（保持目录结构），或拷散文件后统一改 import 路径；`base/theme.ts` 基本必带，`code-display/` 还依赖 `timeline.ts` 与 `colorize.tsx`，`media/` 免 theme 但素材要先用脚本生成。
 - **坐标按 1920×1080 标定**，换画布尺寸时缩放外层容器或改 props；时间参数一律用帧。
 
-素材脚本在项目根运行（`--out` 相对当前目录；美术素材不必全靠手画，优先走 03–05 三条管线）：
+素材脚本在项目根运行（`--out` 相对当前目录；美术素材不必全靠手画，优先走三条管线）：
 
 ```bash
-node remotion-components/scripts/make-audio.mjs --out public --duration 120   # 程序化合成 public/bgm.wav + public/sfx/*.wav
 node remotion-components/scripts/fetch-icons.mjs --icons lucide:rocket lucide:cpu   # Iconify 图标 → public/icons（配 media/Icon）
 node remotion-components/scripts/make-textures.mjs --seed 7                   # 程序化纹理 SVG → public/textures（配 media/Texture）
 node remotion-components/scripts/fetch-lottie.mjs --url <json直链> --name x --license MIT   # Lottie → public/lottie（配 media/LottieAnim）

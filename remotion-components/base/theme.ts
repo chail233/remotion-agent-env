@@ -1,5 +1,5 @@
 // 全库唯一的基础依赖：配色、字体栈、画布常量、两个小工具。
-// 除 scripts/ 外，本库每个组件文件都 `import { C, F, ... } from "./theme"`（路径按项目结构调整）。
+// 除 scripts/、audio/、media/、transitions/ 外，本库组件文件都 `import { C, F, ... } from "../base/theme"`。
 // 换主题只改这一个文件；字体家族名 'Kit *' 来自 base/fonts.ts 的 loadFonts()。
 
 export const C = {

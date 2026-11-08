@@ -3,7 +3,7 @@
 // 典型排期：typeLines 生成代码行 → doneAt 算打完帧号 → console 条目 → consoleOutAt 拿结果帧号，
 // 再用这些帧号对齐舞台动画和音效。依赖：base/theme.ts（颜色）、remotion（interpolate）。
 import { interpolate } from "remotion";
-import { clamp } from "./theme";
+import { clamp } from "../base/theme";
 
 export type CodeLine = { t: string; at: number; speed?: number };
 export type Mark = {

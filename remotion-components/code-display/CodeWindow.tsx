@@ -3,7 +3,7 @@
 // 依赖：base/theme.ts、code-display/timeline.ts（CodeLine 等）、code-display/WindowChrome.tsx、code-display/colorize.tsx。
 import React from "react";
 import { interpolate, useCurrentFrame } from "remotion";
-import { C, F, clamp, hexA } from "./theme";
+import { C, F, clamp, hexA } from "../base/theme";
 import { ALWAYS, fadeWindow, visibleText, type CodeLine, type Highlight, type Mark } from "./timeline";
 import { WindowChrome } from "./WindowChrome";
 import { ColorizedText } from "./colorize";

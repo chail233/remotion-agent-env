@@ -4,7 +4,7 @@
 
 ## 环境构成
 
-- Remotion 4.0.535：core + cli + bundler + player + transitions + google-fonts + media + lottie + sfx
+- Remotion 4.0.535：core + cli + bundler + player + transitions + google-fonts + media + lottie + sfx + shapes
 - React 19、TypeScript 5.9、zod 4.5.4（版本由 Remotion 锁定）
 - Chrome Headless Shell 已下载到 `node_modules/.remotion/`，本机无需装 Chrome
 - Remotion 自带 ffmpeg，不依赖系统 ffmpeg
@@ -24,38 +24,54 @@
 | `npm run typecheck`                | 类型检查                                                        |
 | `npm run upgrade`                  | 升级 Remotion 全家桶                                            |
 
-入口 `src/index.ts` → `src/Root.tsx`（已注册 `CinemaKitDemo` 与 `MediaKitDemo` 两个演示合成；`MediaKitDemo` 依赖素材，渲染前先跑一遍下面三条素材管线）。
+入口 `src/index.ts` → `src/Root.tsx`（已注册 `CoreKitDemo` 与 `MediaKitDemo` 两个演示合成；`MediaKitDemo` 依赖素材，渲染前先跑一遍下面三条素材管线）。
 
 新增 Remotion 包用 `npx remotion add <pkg>` 以保证版本一致，`npx remotion versions` 校验。
 
+## 成片质量要求
+
+用户对动画成片的表现要求，动手前对照、交付前自查：
+
+- **内容充实**：信息量足够、专业准确；引入背景知识，关联现实应用与真实事件
+- **视觉有冲击力**：用运镜引导注意力（推拉聚焦、跟随、急推急停）；用元素形变衔接画面（一个元素连续变换成另一个，而不是生硬替换）
+- **转场多样**：不用淡入淡出用到底；挤压形变、光效、故障、甩镜等特效转场按情绪选型
+- **场景化**：把内容放进具体场景载体（笔记本、IDE、网页、纸张、白板等），不要一个背景用到底
+- **连贯**：场景之间有贯穿元素与延续的视觉语言；叙事与画面前后呼应
+- **音乐**：贴合内容情绪，不阴间不呆板，随章节推进有变化
+- **音效**：跟随画面动作灵活变化，不重复使用同一音效到底
+
+库里没有现成件的能力（运镜 rig、可视化、形变、主题转场等）就自建：见下节「缺件就自建」。
+
 ## 组件库 remotion-components/
 
-本地组件库（不是 npm 包）：`base` 主题/字体、`scene` 背景/外壳/面板、`text` 字幕/气泡/标签/进度条、`code-display` 代码与终端窗口、`effects` 粒子、`motion` hook、`media` 图标/Lottie/纹理消费件、`audio` 音效、`cinema` 深色电影感套件、`scripts` 素材生成与批量预览。总目录见 `remotion-components/AGENTS.md`，各分类目录下另有外观说明表。创作规则（节奏/拍点/构图/反模式）见 `remotion-components/PLAYBOOK.md`；外部配方卡与审美准则全文在 `recipes/`（按需查阅）。
+本地组件库（不是 npm 包）：`base` 主题/字体、`scene` 背景/外壳/面板、`text` 字幕/气泡/标签/进度条、`code-display` 代码与终端窗口、`chart` 图表、`effects` 粒子特效、`transitions` 转场、`motion` hook、`media` 图标/Lottie/纹理消费件、`audio` 音效播放、`scripts` 素材生成与批量预览。总目录见 `remotion-components/AGENTS.md`，各分类目录下另有外观说明表。创作规则（节奏/拍点/构图/反模式）见 `remotion-components/PLAYBOOK.md`；外部配方卡与审美准则全文在 `recipes/`（按需查阅）。
 
 - **按需取用**：它是工具箱不是模板。可以只用一部分、完全不用，也可以把文件拷进 `src/` 后随意改样式、拆件、重组。库的默认外观不构成对创意与设计的约束——方案与组件冲突时改组件。
-- **可直接引用，也可拷进 `src/` 改**：库内 import 写成同目录形式（`./theme`），原地可解析——演示合成就是直接从 `src/Root.tsx` 引用 `remotion-components/` 的（这些文件因此被 `npm run typecheck` 传递检查）。想改样式/拆件时把文件拷进 `src/` 的同一目录再动。拷贝时 `base/theme.ts` 基本必带；`code-display/` 还依赖 `timeline.ts` 与 `colorize.tsx`；`cinema/` 自带独立 theme 整目录一起拷；`media/` 免 theme 但素材要先用脚本生成到 public/。
-- **依赖已就绪**：`scripts/stills.mjs` 需要的 `@remotion/bundler`、`@remotion/renderer`（4.0.535）已装并在 package.json 里声明。
+- **缺件就自建**：库里没有的组件，或自写的版本更契合当前视频的题材与审美时，直接在 `src/` 里写——库只提供通用底座，不是全集，也不追求预置全部能力。
+- **可直接引用，也可拷进 `src/` 改**：库内跨分类依赖统一写 `../base/theme`，整库原地可解析——演示合成直接从 `src/Root.tsx` 引用 `remotion-components/`，库文件因此被 `npm run typecheck` 传递检查。想改样式/拆件时整目录拷进 `src/` 再动（拷散文件记得带上 `base/theme.ts` 并改 import）。`code-display/` 内部还依赖 `timeline.ts` 与 `colorize.tsx`；`media/` 免 theme 但素材要先用脚本生成到 public/。
+- **依赖已就绪**：`scripts/stills.mjs` 需要的 `@remotion/bundler`、`@remotion/renderer`（4.0.535）已装并在 package.json 里声明；jsfxr 已声明，供自写音效合成脚本使用。
 - **字体素材**：`base/fonts.ts` 读 `public/fonts/NotoSansSC-VF.ttf`、`NotoSerifSC-VF.ttf`、`CascadiaCode.ttf`，本机 `C:\Windows\Fonts` 三个都在，需要时自行拷入：
 
   ```bash
   mkdir -p public/fonts && cp /c/Windows/Fonts/{NotoSansSC-VF,NotoSerifSC-VF,CascadiaCode}.ttf public/fonts/
   ```
 
-- **素材与预览脚本**（在项目根运行，`--out` 相对当前目录；美术素材不必全靠手画，优先走这三条管线）：
+- **素材与预览脚本**（在项目根运行，`--out` 相对当前目录；美术素材不必全靠手画，优先走三条管线）：
 
   ```bash
-  node remotion-components/scripts/make-audio.mjs --out public                      # 生成 public/sfx/*.wav（12 个基础音效，配 Sfx）
   node remotion-components/scripts/fetch-icons.mjs --icons lucide:rocket lucide:cpu  # Iconify 图标 → public/icons（配 media/Icon）
   node remotion-components/scripts/make-textures.mjs --seed 7                        # 程序化纹理 SVG → public/textures（配 media/Texture）
-  node remotion-components/scripts/make-jsfx.mjs                                     # jsfxr 8-bit 音效 → public/sfx/*.wav（配 Sfx）
-  node remotion-components/scripts/fetch-sfx.mjs --q "notification" --name ding      # CC0 音效样本 → public/sfx/*.mp3（配 Audio）
   node remotion-components/scripts/fetch-lottie.mjs --url <json直链> --name x --license MIT   # Lottie → public/lottie（配 media/LottieAnim）
+  node remotion-components/scripts/fetch-sfx.mjs --q "notification" --name ding      # CC0 音效样本 → public/sfx/*.mp3（配 Audio）
   node remotion-components/scripts/stills.mjs --entry src/index.ts --comp <Id> 120 450   # 批量抽预览帧
   ```
 
   生成的素材不进 git，按需重跑再生成；来源与许可见各目录下的 licenses.json / manifest.json。管线的完整参数说明在 `remotion-components/scripts/AGENTS.md`，消费组件（上色/播放/铺底）在 `remotion-components/media/AGENTS.md`。
 
-- **音效/配乐来源**（消费端汇总见 `remotion-components/audio/AGENTS.md`）：12 个基础音效用 make-audio（上表）；补量走 make-jsfx（8-bit 预设与 sfxr 分享串）和 fetch-sfx（CC0 样本 mp3，`<Audio src={staticFile("sfx/x.mp3")}/>` 播）；官方 `@remotion/sfx`（已装）提供 32 个免署名直链音效，`import { whoosh } from "@remotion/sfx"` 后 `<Audio src={whoosh}/>` 直接用。**BGM 不再内置生成**：自备放 `public/bgm.wav`（AI 生成 / CC0 音乐包如 Kenney、FreePD），`<Bgm />` 播放并自动淡入淡出。配音 TTS 与字幕转录按 `skills/remotion-markup/` 的 `voiceover.md`、`transcribe-captions.md`。
+- **音频不预置**：库里没有现成音效/配乐文件，每条视频按需要自己准备（消费端汇总见 `remotion-components/audio/AGENTS.md` 03 节）：
+  - 音效：官方 `@remotion/sfx`（已装）提供 32 个免署名直链音效，`import { whoosh } from "@remotion/sfx"` 后 `<Audio src={whoosh}/>` 直接用；`fetch-sfx` 按关键词下载 CC0 样本 mp3（`<Audio src={staticFile("sfx/x.mp3")}/>` 播）；参数化合成走自写脚本（jsfxr 或纯 PCM，git 历史里有 make-audio / make-jsfx 可参考）
+  - BGM：自备放 `public/bgm.wav`（AI 生成 / CC0 音乐包如 Kenney、FreePD），`<Bgm />` 播放并自动淡入淡出
+  - 配音 TTS：`skills/remotion-markup/voiceover.md`（ElevenLabs 方案）；免 key 的中文替代是 npm 包 msedge-tts，同样按场景产出 mp3 放 `public/`，字幕转录按 `transcribe-captions.md`
 
 - `npm run format` 已用 `.prettierignore` 跳过 `remotion-components/`，不会改写库本体。
 

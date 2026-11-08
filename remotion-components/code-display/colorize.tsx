@@ -2,7 +2,7 @@
 // ColorizedText 的 marks 参数用于给行内一段文字加发光框（CodeWindow 的 marks 会转换成它）。
 // 注意：Cascadia Code 会把 >=、=> 渲染成连字（显示成 ≥、⇒）。依赖：base/theme.ts。
 import React from "react";
-import { C, hexA } from "./theme";
+import { C, hexA } from "../base/theme";
 
 const KEYWORDS = new Set([
   "class", "constructor", "new", "const", "let", "return", "private", "public",

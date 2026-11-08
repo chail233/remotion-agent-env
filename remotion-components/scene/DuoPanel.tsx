@@ -3,7 +3,7 @@
 // 只负责框架与头部，正文内容由调用方在面板之上另行定位叠加。依赖：base/theme.ts。
 import React from "react";
 import { interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
-import { C, F, W, hexA } from "./theme";
+import { C, F, W, hexA } from "../base/theme";
 
 export type DuoSide = {
   /** 主题色：面板渐变/描边/阴影/头部小字都从它派生 */

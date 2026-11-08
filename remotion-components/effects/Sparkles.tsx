@@ -2,7 +2,7 @@
 // 金色与白色交替；seed 控制随机抖动。依赖：base/theme.ts。
 import React from "react";
 import { interpolate, random, useCurrentFrame } from "remotion";
-import { C, clamp } from "./theme";
+import { C, clamp } from "../base/theme";
 
 export const Sparkles: React.FC<{
   at: number;

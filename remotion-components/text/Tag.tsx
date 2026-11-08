@@ -1,7 +1,7 @@
 // 彩色描边胶囊标签：行内元素，给概念打标签用（如「类」「实例」）。
 // 定位交给外层（style 传 position/absolute 坐标）。依赖：base/theme.ts。
 import React from "react";
-import { C, F, hexA } from "./theme";
+import { C, F, hexA } from "../base/theme";
 
 export const Tag: React.FC<{
   children: React.ReactNode;

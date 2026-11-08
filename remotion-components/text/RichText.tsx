@@ -1,7 +1,7 @@
 // 文字小语法渲染器（不是定位元素，放进行内即可）：「词」→ 强调色加粗，`code` → 代码字体小标签。
 // Captions、Bubble 之外的自定义文字块想套用同一语法时也用它。依赖：base/theme.ts。
 import React from "react";
-import { C, F, hexA } from "./theme";
+import { C, F, hexA } from "../base/theme";
 
 export const RichText: React.FC<{
   text: string;

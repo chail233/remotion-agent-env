@@ -3,7 +3,7 @@
 // 与 code-display 打字系列的区别：不挑代码内容，任何字符串都能打。依赖：base/theme.ts。
 import React from "react";
 import { useCurrentFrame } from "remotion";
-import { C } from "./theme";
+import { C } from "../base/theme";
 
 export const Typewriter: React.FC<{
   text: string;

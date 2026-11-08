@@ -3,7 +3,7 @@
 // 依赖：base/theme.ts（弹出逻辑已内联，与原 motion/usePop 相同参数）。
 import React from "react";
 import { interpolate, spring, useCurrentFrame, useVideoConfig } from "remotion";
-import { C, F, clamp } from "./theme";
+import { C, F, clamp } from "../base/theme";
 
 export const Bubble: React.FC<{
   at: number;
