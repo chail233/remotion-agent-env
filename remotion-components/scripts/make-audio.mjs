@@ -1,13 +1,11 @@
-// 合成背景音乐和音效（纯代码生成，无版权问题）
+#!/usr/bin/env node
+// make-audio.mjs — 程序化合成 12 种基础音效到 public/sfx/*.wav（纯代码生成，无版权问题）。
+// 不再内置 BGM 生成：背景音乐从外部来源放 public/bgm.wav（AI 生成 / CC0 音乐包 / 自备），
+// 播放端用 remotion-components/audio/Bgm.tsx（淡入淡出包络，锚定合成总长）。
 // 用法：
-//   node make-audio.mjs --out public --duration 384 --ending 336
-//   node make-audio.mjs --out public --sfx-only
+//   node make-audio.mjs --out public
 // 参数：
-//   --out       输出目录（生成 <out>/bgm.wav 和 <out>/sfx/*.wav），默认 ./public
-//   --duration  背景音乐总长（秒），不传则只生成音效
-//   --ending    抒情尾声开始的秒数，默认不要尾声（全程轻快 lo-fi，最后自然收尾）
-//   --drums-in  鼓点进入的秒数，默认 13（之前只有钢琴和 pad）
-//   --sfx-only  只生成音效
+//   --out   输出目录（生成 <out>/sfx/*.wav，总是覆盖重生成），默认 ./public
 import fs from "node:fs";
 import path from "node:path";
 
@@ -75,48 +73,8 @@ const add = (buf, t, dur, fn, gain = 1) => {
 };
 
 // ---------- 乐器 ----------
-const epiano = (f, hold) => (t) => {
-  const env = Math.min(1, t / 0.008) * Math.exp(-t * 1.6) * (t > hold ? Math.exp(-(t - hold) * 8) : 1);
-  const trem = 1 + 0.06 * Math.sin(TAU * 4.5 * t);
-  return (
-    env *
-    trem *
-    (Math.sin(TAU * f * t) + 0.32 * Math.sin(TAU * 2 * f * t + 0.3) + 0.1 * Math.sin(TAU * 3 * f * t) + 0.05 * Math.sin(TAU * 4.01 * f * t))
-  );
-};
 const bell = (f, decay = 5) => (t) =>
   Math.min(1, t / 0.003) * Math.exp(-t * decay) * (Math.sin(TAU * f * t) + 0.35 * Math.sin(TAU * 2.76 * f * t) * Math.exp(-t * 6));
-const bass = (f, hold) => (t) => {
-  const env = Math.min(1, t / 0.01) * Math.exp(-t * 1.2) * (t > hold ? Math.exp(-(t - hold) * 10) : 1);
-  return env * (Math.sin(TAU * f * t) + 0.25 * Math.sin(TAU * 2 * f * t));
-};
-const pad = (f, dur) => (t) => {
-  const env = Math.min(1, t / 1.2) * Math.min(1, Math.max(0, (dur - t) / 1.2));
-  let v = 0;
-  for (const d of [-0.12, 0, 0.13]) v += Math.sin(TAU * f * Math.pow(2, d / 12) * t) + 0.2 * Math.sin(TAU * 2 * f * Math.pow(2, d / 12) * t);
-  return (env * v) / 3;
-};
-const kick = (t) => {
-  const f = 45 + 75 * Math.exp(-t * 28);
-  const ph = TAU * (45 * t + (75 / 28) * (1 - Math.exp(-t * 28)));
-  return Math.sin(ph) * Math.exp(-t * 9) * (f > 0 ? 1 : 0);
-};
-const makeSnare = () => {
-  let lp = 0;
-  return (t) => {
-    lp += (noise() - lp) * 0.35;
-    return lp * Math.exp(-t * 22) * 0.9 + Math.sin(TAU * 185 * t) * Math.exp(-t * 30) * 0.5;
-  };
-};
-const makeHat = () => {
-  let prev = 0;
-  return (t) => {
-    const n = noise();
-    const hp = n - prev;
-    prev = n;
-    return hp * Math.exp(-t * 70);
-  };
-};
 
 // 简易混响：几条反馈延迟
 const reverb = (buf, mix = 0.22) => {
@@ -135,120 +93,6 @@ const reverb = (buf, mix = 0.22) => {
   }
   return out;
 };
-
-// ---------- 背景音乐 ----------
-const makeBgm = (total, endingArg, drumsIn) => {
-const hasEnding = endingArg !== undefined;
-const endingStart = hasEnding ? Number(endingArg) : total;
-console.log(`背景音乐总长 ${total.toFixed(1)}s` + (hasEnding ? `，尾声从 ${endingStart.toFixed(1)}s 开始` : "，无尾声"));
-const len = Math.ceil((total + 1) * SR);
-const keys = new Float32Array(len);
-const low = new Float32Array(len);
-const drums = new Float32Array(len);
-
-const CH = {
-  Fmaj7: { n: [53, 57, 60, 64], b: 41 },
-  G: { n: [55, 59, 62, 65], b: 43 },
-  Em7: { n: [52, 55, 59, 62], b: 40 },
-  Am7: { n: [57, 60, 64, 67], b: 45 },
-  Dm7: { n: [50, 53, 57, 60], b: 38 },
-  Cmaj7: { n: [55, 59, 60, 64], b: 36 },
-  Cadd9: { n: [55, 60, 62, 64], b: 36 },
-};
-
-// 主段：92 BPM，王道进行
-const mainProg = ["Fmaj7", "G", "Em7", "Am7", "Dm7", "Em7", "Fmaj7", "G"];
-const BPM = 92;
-const beat = 60 / BPM;
-const bar = beat * 4;
-const mainEnd = hasEnding ? endingStart - 0.5 : total;
-const snare = makeSnare();
-const hat = makeHat();
-let b = 0;
-for (let t0 = 0; t0 < mainEnd; t0 += bar, b++) {
-  const c = CH[mainProg[b % mainProg.length]];
-  const fadeOut = Math.min(1, Math.max(0, (mainEnd - t0) / (bar * 1.5)));
-  const g = 0.9 * fadeOut;
-  // 和弦
-  c.n.forEach((m, k) => {
-    add(keys, t0 + k * 0.012, bar, epiano(mtof(m), beat * 1.6), 0.17 * g);
-    add(keys, t0 + beat * 2.5 + k * 0.01, bar * 0.6, epiano(mtof(m), beat * 1.2), 0.1 * g);
-  });
-  // 贝斯
-  add(low, t0, beat * 2.4, bass(mtof(c.b), beat * 2), 0.42 * g);
-  add(low, t0 + beat * 2.5, beat * 1.4, bass(mtof(c.b + (b % 2 ? 7 : 12)), beat * 1.1), 0.3 * g);
-  // 琶音
-  const arp = [c.n[0] + 12, c.n[1] + 12, c.n[2] + 12, c.n[3] + 12, c.n[2] + 12, c.n[1] + 12, c.n[3] + 12, c.n[2] + 24];
-  arp.forEach((m, k) => {
-    const swing = k % 2 ? beat * 0.08 : 0;
-    add(keys, t0 + k * (beat / 2) + swing, 0.8, bell(mtof(m), 6), (t0 < drumsIn ? 0.05 : 0.065) * g);
-  });
-  // 鼓
-  if (t0 >= drumsIn - 0.01) {
-    add(drums, t0, 0.5, kick, 0.55 * g);
-    add(drums, t0 + beat * 2.5, 0.5, kick, 0.4 * g);
-    add(drums, t0 + beat, 0.3, snare, 0.22 * g);
-    add(drums, t0 + beat * 3, 0.3, snare, 0.22 * g);
-    for (let k = 0; k < 8; k++) {
-      const swing = k % 2 ? beat * 0.08 : 0;
-      add(drums, t0 + k * (beat / 2) + swing, 0.08, hat, (k % 2 ? 0.07 : 0.1) * g);
-    }
-  } else if (t0 + bar > drumsIn - 0.01 && t0 < drumsIn) {
-    // 进鼓前的小过门
-    [0, 0.25, 0.5, 0.75].forEach((x, k) => add(drums, t0 + beat * (3 + x), 0.2, snare, (0.08 + k * 0.04) * g));
-  }
-}
-// 开场垫底的 pad
-for (let t0 = 0, k = 0; t0 < drumsIn; t0 += bar, k++) {
-  const c = CH[mainProg[k % mainProg.length]];
-  c.n.forEach((m) => add(keys, t0, bar + 1.2, pad(mtof(m), bar + 1.2), 0.05));
-}
-
-if (hasEnding) {
-// 尾声：70 BPM，抒情钢琴 + pad
-const EB = 60 / 70;
-const ebar = EB * 4;
-const endProg = ["Fmaj7", "Em7", "Dm7", "Cmaj7", "Fmaj7", "G", "Em7", "Am7", "Dm7", "Em7", "Fmaj7", "G"];
-const endLen = total - endingStart;
-const finalAt = endingStart + Math.max(ebar * 8, Math.floor((endLen - 8) / ebar) * ebar);
-let eb = 0;
-for (let t0 = endingStart; t0 < finalAt - 0.01; t0 += ebar, eb++) {
-  const c = CH[endProg[eb % endProg.length]];
-  const fi = Math.min(1, (t0 - endingStart + ebar) / (ebar * 1.5));
-  c.n.forEach((m, k) => {
-    add(keys, t0, ebar + 1.5, pad(mtof(m), ebar + 1.5), 0.06 * fi);
-    add(keys, t0 + k * 0.05, ebar, epiano(mtof(m), EB * 2.5), 0.12 * fi);
-  });
-  add(low, t0, ebar, bass(mtof(c.b), EB * 3), 0.3 * fi);
-  // 慢琶音
-  const arp = [c.n[0] + 12, c.n[2] + 12, c.n[3] + 12, c.n[1] + 24, c.n[3] + 12, c.n[2] + 12];
-  arp.forEach((m, k) => add(keys, t0 + EB * 0.5 + k * (EB * 0.58), 1.6, bell(mtof(m), 3.2), 0.06 * fi));
-}
-// 终止和弦
-CH.Cadd9.n.forEach((m, k) => {
-  add(keys, finalAt + k * 0.07, 8, epiano(mtof(m), 6), 0.15);
-  add(keys, finalAt, 8, pad(mtof(m), 8), 0.07);
-  add(keys, finalAt + 0.4 + k * 0.18, 4, bell(mtof(m + 24), 2), 0.05);
-});
-add(low, finalAt, 8, bass(mtof(36), 6), 0.32);
-}
-
-const wetKeys = reverb(keys, 0.35);
-const L = new Float32Array(len);
-const R = new Float32Array(len);
-for (let i = 0; i < len; i++) {
-  const v = wetKeys[i] + low[i] + drums[i];
-  L[i] = v + keys[i] * 0.05;
-  R[i] = v - keys[i] * 0.05;
-}
-normalize([L, R], 0.85);
-writeWav(path.join(OUT, "bgm.wav"), L, R);
-console.log(`✓ ${path.join(OUT, "bgm.wav")}`);
-};
-
-if (!args.includes("--sfx-only") && arg("duration") !== undefined) {
-  makeBgm(Number(arg("duration")), arg("ending"), Number(arg("drums-in", 13)));
-}
 
 // ---------- 音效 ----------
 const sfx = (name, dur, build, peak = 0.85) => {

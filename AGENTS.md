@@ -4,7 +4,7 @@
 
 ## 环境构成
 
-- Remotion 4.0.535：core + cli + bundler + player + transitions + google-fonts + media + lottie
+- Remotion 4.0.535：core + cli + bundler + player + transitions + google-fonts + media + lottie + sfx
 - React 19、TypeScript 5.9、zod 4.5.4（版本由 Remotion 锁定）
 - Chrome Headless Shell 已下载到 `node_modules/.remotion/`，本机无需装 Chrome
 - Remotion 自带 ffmpeg，不依赖系统 ffmpeg
@@ -44,14 +44,18 @@
 - **素材与预览脚本**（在项目根运行，`--out` 相对当前目录；美术素材不必全靠手画，优先走这三条管线）：
 
   ```bash
-  node remotion-components/scripts/make-audio.mjs --out public --duration <总秒数>   # 生成 public/bgm.wav + public/sfx/*.wav
+  node remotion-components/scripts/make-audio.mjs --out public                      # 生成 public/sfx/*.wav（12 个基础音效，配 Sfx）
   node remotion-components/scripts/fetch-icons.mjs --icons lucide:rocket lucide:cpu  # Iconify 图标 → public/icons（配 media/Icon）
   node remotion-components/scripts/make-textures.mjs --seed 7                        # 程序化纹理 SVG → public/textures（配 media/Texture）
+  node remotion-components/scripts/make-jsfx.mjs                                     # jsfxr 8-bit 音效 → public/sfx/*.wav（配 Sfx）
+  node remotion-components/scripts/fetch-sfx.mjs --q "notification" --name ding      # CC0 音效样本 → public/sfx/*.mp3（配 Audio）
   node remotion-components/scripts/fetch-lottie.mjs --url <json直链> --name x --license MIT   # Lottie → public/lottie（配 media/LottieAnim）
   node remotion-components/scripts/stills.mjs --entry src/index.ts --comp <Id> 120 450   # 批量抽预览帧
   ```
 
   生成的素材不进 git，按需重跑再生成；来源与许可见各目录下的 licenses.json / manifest.json。管线的完整参数说明在 `remotion-components/scripts/AGENTS.md`，消费组件（上色/播放/铺底）在 `remotion-components/media/AGENTS.md`。
+
+- **音效/配乐来源**（消费端汇总见 `remotion-components/audio/AGENTS.md`）：12 个基础音效用 make-audio（上表）；补量走 make-jsfx（8-bit 预设与 sfxr 分享串）和 fetch-sfx（CC0 样本 mp3，`<Audio src={staticFile("sfx/x.mp3")}/>` 播）；官方 `@remotion/sfx`（已装）提供 32 个免署名直链音效，`import { whoosh } from "@remotion/sfx"` 后 `<Audio src={whoosh}/>` 直接用。**BGM 不再内置生成**：自备放 `public/bgm.wav`（AI 生成 / CC0 音乐包如 Kenney、FreePD），`<Bgm />` 播放并自动淡入淡出。配音 TTS 与字幕转录按 `skills/remotion-markup/` 的 `voiceover.md`、`transcribe-captions.md`。
 
 - `npm run format` 已用 `.prettierignore` 跳过 `remotion-components/`，不会改写库本体。
 
