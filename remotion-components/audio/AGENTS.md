@@ -31,8 +31,9 @@
 |---|---|---|---|
 | `@remotion/sfx`（已装，免署名） | `import { whoosh, ding } from "@remotion/sfx"` → `<Audio src={whoosh}/>` | 官方托管 32 个直链 | 零准备成本；工具音 + 梗音（wilhelm-scream、vine-boom…），适合彩蛋 |
 | scripts/05 fetch-sfx.mjs | `fetch-sfx.mjs --q "…" --name x` | CC0 mp3，登记进 `public/sfx/licenses.json` | 按关键词搜真实质感样本，先 `--list` 挑再下 |
+| scripts/06 + 07（配音） | `gen-vo.mjs` → `build-vo-timeline.mjs` | `public/vo/*.mp3` + 词级时间戳 + `src/vo.ts` | 免 key（msedge-tts）；中英文配音、字幕、场景时间轴一次生成 |
 | 自写合成脚本 | jsfxr（依赖已声明）或纯 PCM 写 wav | `public/sfx/*.wav` | 参数完全自定义；本仓 git 历史里有 make-audio / make-jsfx 两个合成脚本可作参考 |
 | BGM | 自备放 `public/bgm.wav`，或 `<Bgm src>` 指任意音频 | — | AI 生成 / CC0 音乐包（Kenney、FreePD 等），按内容情绪选曲 |
 
 - `Sfx` 只认 `public/sfx/<name>.wav`，且 Sequence 窗口 120 帧（30fps 下 4s）——更长或 mp3 的音频一律直接 `<Audio>`
-- 配音（TTS）与字幕转录管线见 `skills/remotion-markup/` 的 `voiceover.md`、`transcribe-captions.md`；各脚本参数详见 `scripts/AGENTS.md`
+- 配音（TTS）走 `scripts/06 gen-vo.mjs` + `scripts/07 build-vo-timeline.mjs`（msedge-tts，免 key；产出 mp3、词级时间戳、字幕与场景时间轴）；付费方案与字幕转录另见 `skills/remotion-markup/` 的 `voiceover.md`、`transcribe-captions.md`；各脚本参数详见 `scripts/AGENTS.md`

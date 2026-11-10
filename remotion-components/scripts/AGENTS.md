@@ -11,6 +11,8 @@
 | scripts/03 | fetch-lottie.mjs | 下载 Lottie JSON 动画 + 来源/许可登记（配 media/02 LottieAnim） |
 | scripts/04 | make-textures.mjs | seed 确定性生成背景/装饰纹理 SVG（配 media/03 Texture） |
 | scripts/05 | fetch-sfx.mjs | 从 Lots of Sounds 免 key API 下载 CC0 音效 mp3 + 许可登记 |
+| scripts/06 | gen-vo.mjs | 逐场配音 + 词级时间戳 + 标点感知字幕切分（msedge-tts，免 key） |
+| scripts/07 | build-vo-timeline.mjs | 把配音元数据排成场景时间轴，生成 SCENES/CAPS/WORDS/BEATS 的 TS 模块 |
 
 音频合成脚本（原 make-audio / make-jsfx）已移除：音效按每条视频自选来源，见 `audio/AGENTS.md` 03 节。jsfxr 依赖仍声明在 package.json，供自写音效合成脚本使用；旧脚本可从本仓 git 历史找回。
 
@@ -68,3 +70,58 @@ node scripts/fetch-sfx.mjs --id fs-11587 --name microwave-ding               # �
 - 产物是 **mp3**：`<Sfx>` 只认 .wav，mp3 用 `<Audio src={staticFile("sfx/x.mp3")}/>` 播；长于 2s 的样本也走 `<Audio>`（`Sfx` 的 120 帧窗口会截断）
 - 网络注意：文件 CDN（files.lotsofsounds.com，CloudFront）在部分网络 TLS 握手慢，脚本已内置 30s 超时 × 3 次重试；API 主机直连无碍
 - 更多全目录检索/下载需其付费 key（`x-api-key`），本脚本不涉及；更大的 CC0 库还有 Kenney（整包 zip）、Freesound（需 OAuth key）
+
+## 06 gen-vo.mjs — 配音 + 词级时间戳
+
+```bash
+node scripts/gen-vo.mjs [--script vo/script.json] [--out public/vo] [--meta public/vo/meta.json]
+node scripts/gen-vo.mjs --voices zh-CN     # 列出可用音色（zh-CN / en-US / ja-JP …）
+```
+
+从 `vo/script.json` 逐场合成配音，产出 `public/vo/<id>.mp3` 与 `public/vo/meta.json`。用 npm 包 **msedge-tts**（Edge Read Aloud，免 key、无需 Python），音频固定 24kHz/48kbps 单声道 mp3，词边界时间戳由服务端返回。
+
+```json
+{
+  "voice": "zh-CN-XiaoxiaoNeural",
+  "rate": "+10%",
+  "fps": 30,
+  "scenes": [
+    {
+      "id": "s01",
+      "title": "钩子",
+      "text": "你的电脑，不会掷骰子。",
+      "lead": 26,
+      "tail": 46,
+      "transition": 20,
+      "beats": { "titleAt": ["骰子", 2.4] }
+    }
+  ]
+}
+```
+
+- 必填只有 `scenes[].id` 与 `scenes[].text`；`voice` 默认 `zh-CN-XiaoxiaoNeural`，`rate` 默认 `+0%`，`fps` 默认 30。场景上还可写 `pitch` / `volume` 覆盖全局
+- `lead` / `tail` / `transition` / `beats` 会原样带进 meta，供 07 排时间轴
+- 字幕自动切分：中文默认每条约 26 字、英文约 42 字符（可用顶层 `captionMaxChars` 覆盖）；按词时间戳做标点感知对齐，跳过标点/空格，中英文都不漂移
+- `durSec` 取**最后一个词的结束时间**，TTS 尾部静音由场景 `tail` 吸收；重跑会覆盖同名 mp3 与 meta
+- 输出目录默认 `public/vo/`（已 gitignore）；`vo/script.json` 是源文件，建议进 git
+
+## 07 build-vo-timeline.mjs — 场景时间轴
+
+```bash
+node scripts/build-vo-timeline.mjs [--meta public/vo/meta.json] [--out src/vo.ts]
+```
+
+读 06 产出的 meta，按每场 `lead + ceil(durSec × fps) + tail` 算时长，再按 `transition` 扣重叠排出全局起点，生成可直接 import 的 TS 模块：
+
+| 导出 | 内容 |
+|---|---|
+| `FPS` / `TOTAL` | 帧率与全片总帧数 |
+| `SCENES` | `{ id, title, start, dur, lead, tail, voF }[]` |
+| `VO_SEQ` | `{ id, from }[]`：每场配音的全局起点 |
+| `CAPS` | `[起帧, 止帧, 文本][]`：字幕 |
+| `WORDS` | `[文本, 起帧, 止帧][]`：词级时间，配 `text/07 Karaoke` |
+| `BEATS` | `Record<场景id, Record<锚点名, 场景本地帧>>`：由词 token 自动对齐 |
+
+- 默认参数：`lead=26`、`tail=46`、`transition=20` 帧；最后一场转场恒为 0
+- `beats` 写法 `{ "titleAt": ["骰子", 2.4] }`：先精确匹配词 token，再退化为包含，找不到用兜底秒数；换配音后锚点自动跟随
+- 生成文件默认 `src/vo.ts`，头部标注 AUTO-GENERATED；不要手改，重跑 06 + 07 即可

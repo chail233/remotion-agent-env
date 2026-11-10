@@ -62,14 +62,17 @@
 | scripts/03 | fetch-lottie.mjs | CLI：下载 Lottie JSON + 来源/许可登记 → public/lottie |
 | scripts/04 | make-textures.mjs | CLI：seed 确定性生成 7 种纹理 SVG → public/textures |
 | scripts/05 | fetch-sfx.mjs | CLI：Lots of Sounds 下载 CC0 音效 mp3 + 许可登记 → public/sfx |
+| scripts/06 | gen-vo.mjs | CLI：msedge-tts 逐场配音 + 词级时间戳 + 字幕切分 → public/vo |
+| scripts/07 | build-vo-timeline.mjs | CLI：配音元数据 → src/vo.ts（场景/字幕/词级时间/节拍） |
 
 ## 接入新项目（Agent 操作清单）
 
 1. 把需要的分类目录整目录拷进项目（跨分类 import 指向 `../base/theme`，保持目录结构即可），或拷散文件后统一改 import 路径
-2. `scripts/*.mjs` 拷到项目根目录，按第 5 步的管线生成/拉取素材；音效与 BGM 文件自备或下载（见 `audio/AGENTS.md` 03 节）
+2. `scripts/*.mjs` 拷到项目根目录，按第 5、6 步的管线生成/拉取素材；音效与 BGM 文件自备或下载（见 `audio/AGENTS.md` 03 节）
 3. 字体：从 `C:\Windows\Fonts` 拷 `NotoSansSC-VF.ttf`、`NotoSerifSC-VF.ttf`、`CascadiaCode.ttf` 进 `public/fonts/`，在根组件模块顶层调用一次 `loadFonts()`；不需要这套字体就不装，组件会走 F 里的系统回退
 4. BGM 用 `audio/02 Bgm` 挂在合成最外层（`<Bgm />`，默认 public/bgm.wav，音量/淡入淡出可调；0.55 时整片约 -19 LUFS）
 5. **美术素材走三条管线**（见 `media/AGENTS.md` 与 `scripts/AGENTS.md` 02–04），产出到 public/ 后用 `media/01–03` 组件消费；生成/下载的素材**不进 git**，clone 后按需重跑脚本；正式使用前核对各清单文件里的 license 字段
+6. **需要旁白/字幕时**：写 `vo/script.json` → `scripts/06 gen-vo.mjs` 出 mp3 与词级时间戳 → `scripts/07 build-vo-timeline.mjs` 出 `src/vo.ts`（场景起点/字幕/词级时间/节拍）；`CAPS` 喂 `text/01 Captions`，`WORDS` 喂 `text/07 Karaoke`。含 `lead/tail/transition` 的场景时长由 07 自动计算，不要再手排帧号
 
 ## 技术备忘（与用法无关的事实）
 
