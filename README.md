@@ -70,7 +70,8 @@ node remotion-components/scripts/stills.mjs --entry src/index.ts --comp <Id> 120
 
 ## 环境要点
 
-- Remotion 4.0.535：core + cli + bundler + renderer + player + transitions + google-fonts + media + lottie + sfx + shapes；React 19 / TypeScript 5.9 / zod 4.5.4（zod 由 Remotion 锁定）
+- Remotion 4.0.535：core + cli + bundler + renderer + player + transitions + google-fonts + media + lottie + sfx + shapes + three；React 19 / TypeScript 5.9 / zod 4.5.4（zod 由 Remotion 锁定）
+- 3D 用 `@remotion/three` + `three` + `@react-three/fiber`（R3F 9 对应 React 19），headless 渲染已验证；写法与确定性约束见 `skills/remotion-markup/3d.md`
 - Chrome Headless Shell 落在 `node_modules/.remotion/`，ffmpeg 由 Remotion 自带
 - 中文字体：`base/fonts.ts` 读 `public/fonts/` 的 Noto Sans SC / Noto Serif SC / Cascadia Code，Windows 可从 `C:\Windows\Fonts` 拷入
 - 配音用 `msedge-tts`（免 key），音效/BGM 按片自备，见 `remotion-components/audio/AGENTS.md`

@@ -4,7 +4,8 @@
 
 ## 环境构成
 
-- Remotion 4.0.535：core + cli + bundler + player + transitions + google-fonts + media + lottie + sfx + shapes
+- Remotion 4.0.535：core + cli + bundler + player + transitions + google-fonts + media + lottie + sfx + shapes + three
+- 3D：`@remotion/three`（`<ThreeCanvas>`）+ `three` 0.187 + `@react-three/fiber` 9 + `@types/three`；动画只能由 `useCurrentFrame()` 驱动、禁用 `useFrame`，完整规则见 `skills/remotion-markup/3d.md`
 - React 19、TypeScript 5.9、zod 4.5.4（版本由 Remotion 锁定）
 - Chrome Headless Shell 已下载到 `node_modules/.remotion/`，本机无需装 Chrome
 - Remotion 自带 ffmpeg，不依赖系统 ffmpeg
